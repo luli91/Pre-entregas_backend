@@ -1,11 +1,9 @@
 import { Router } from 'express';
-import ProductManager from './manager/ProductManager.js';
+import { ProductManager, productos} from './manager/ProductManager.js';
 
 const router = Router();
 
-const productManager = new ProductManager();
-let products = productManager.getProducts();
-
+const productManager = new ProductManager("./src/data/productos.json");
 
 
 // Ruta para obtener todos los productos
@@ -36,5 +34,5 @@ router.get('/:pid', (req, res) => {
         producto,
     });
 });
-
+//post y delete
 export default router;
