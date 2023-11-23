@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import ProductManager from './manager/ProductManager.js'
+import ProductManager from '../manager/ProductManager.js';
 
 
 const router = Router();
-const productManager = new ProductManager('./data/products.json');
+const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
 // ruta para obtener todos los productos
 router.get('/', (req, res) => {
@@ -19,10 +19,10 @@ router.get('/', (req, res) => {
 // ruta para obtener un producto por su id
 
 router.get('/:pid', (req, res) => {
+    
     const { pid } = req.params;
 
-    const products = productManager.getProducts();
-    const producto = products.find((product) => Number(product.id) === Number(pid));
+    const producto = productManager.getProductById(Number(pid));
 
     if(!producto){
         return res.json({
@@ -34,6 +34,7 @@ router.get('/:pid', (req, res) => {
         producto,
     });
 });
+
 
 router.post('/', async (req, res) => {
     const { title, description, price, thumbnail, code, stock, category, thumbnails } = req.body;

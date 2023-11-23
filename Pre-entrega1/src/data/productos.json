@@ -1,1 +1,14 @@
-[]
+[
+	{
+		"id": 2,
+		"title": "La cruz ardiente",
+		"description": "libro saga 5",
+		"price": 23.599,
+		"thumbnail": "https://www.penguinlibros.com/ar/2133484-home_default/la-cruz-ardiente-saga-outlander-5.webp",
+		"code": "ab1234",
+		"stock": 8,
+		"status": true,
+		"category": "books",
+		"thumbnails": []
+	}
+]

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import CartManager from './manager/CartManager.js'
+import CartManager from '../manager/CartManager.js'
 
 const router = Router();
-const cartManager = new CartManager('./data/carts.json');
+const cartManager = new CartManager('./Pre-entrega1/src/data/carts.json');
 
 router.post('/', async (req, res) => {
     const cart = await cartManager.addCart();
