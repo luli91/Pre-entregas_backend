@@ -1,0 +1,19 @@
+<div>
+    <form id="productForm">
+    <input type="text" id="productName" placeholder="Nombre del producto">
+    <input type="submit" value="Crear producto">
+</form>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    document.getElementById('productForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var productName = document.getElementById('productName').value;
+        socket.emit('new product', productName);
+    });
+</script>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/form.js"></script>
+</div>

@@ -34,16 +34,17 @@ export default class ProductManager{
         const { title, description, price, thumbnail, code, stock } = product;
 
         if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.error("Todos los campos son obligatorios");
-            return;
+
+            return {error:"Todos los campos son obligatorios"};
         }
 
     const existingProduct = this.products.find(existingProduct => existingProduct.code === product.code);
 
 
     if (existingProduct) {
-        console.error("El producto ya existe");
-        return;
+
+        return {error: "El producto ya existe"};
+    
     }
 
         product.id = this.currentId++;
