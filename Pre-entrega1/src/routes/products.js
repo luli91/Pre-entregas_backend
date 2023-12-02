@@ -59,12 +59,17 @@ router.post('/', async (req, res) => {
     };
 
     // intenta agregar el producto
-    const respuesta = await productManager.addProduct(product);
-    if (respuesta) {
-        res.json(product);
-    } else {
-        res.status(500).json({ error: 'Hubo un error al crear el producto' });
-    }
+    try{
+        const respuesta = await productManager.addProduct(product);
+        if(respuesta?.error) {  // Aca capturas el error que devuelve addProduct
+        return res.status(404).json({error: respuesta.error})
+        }
+        res.status(201).json(product);
+    } catch(error) {
+    
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }    
+
 });
 
 // Ruta para actualizar un producto por su id

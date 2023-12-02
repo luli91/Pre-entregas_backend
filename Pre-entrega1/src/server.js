@@ -1,10 +1,12 @@
 import express from 'express';
 import carts from "./routes/carts.js";
 import products from "./routes/products.js";
+import ProductManager from './manager/ProductManager.js';
+import { Product } from './manager/ProductManager.js';
 import handlebars from "express-handlebars";
-import viewRouter from "./routes/views.routes.js";
-import __dirname from "./utils.js";
+import { __dirname } from "./dirname.js";
 import { Server } from "socket.io";
+import viewsRouter from "./routes/views.routes.js";
 
 
 const app = express ();
@@ -16,60 +18,58 @@ const httpServer = app.listen(PORT, () =>
 
 // Instanciar Websocket
 //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
-const socketServer = new Server(httpServer);
+const io = new Server(httpServer);
 
-// Middlewares
+// Middlewares(envian info por medio de post)
 app.use(express.json())
 app.use (express.urlencoded({extended: true}));
 
-// Configuramos el motor de plantilla
+// Configuramos el motor de plantilla (handlebars)
 app.engine('hbs', handlebars.engine({
-    extname: 'hbs',//el nombre del archivo lo definimos acá. porej: index.hbs
+    extname: '.hbs',//el nombre del archivo lo definimos acá. porej: index.hbs
     defaultlayout: 'main' //toma la plantilla principal
-}))
+    })
+);
 
-//seteamos el motor
+//seteamos el motor, acá es donde le dices a Express.js dónde buscar tus archivos de vistas.
 app.set("view engine", "hbs");
-app.set("views", `${__dirname}/views`);
+app.set("views", `${__dirname}/view`);
 
-//public
+//public- la carpeta que es acessible al cliente
 app.use(express.static(`${__dirname}/public`));
-
-// //ruta principal
-
-// app.get("/", (req, res) =>{
-//     res.json({
-//         mensaje:"Bienvenidos a Only Books"
-//     });
-// });
 
 //routes
 app.use('/api/carts', carts);
-
 app.use('/api/products', products);
+app.use('/', viewsRouter);
 
-app.use("/", viewRouter);
+//instanciamos el manager
 
-app.get("/", (req, res) => {
-    // aca puedo leer los productos del archivo JSON
-    const products = readProductsFromFile();
-    res.render('home', { products: products });
-});
+const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
-
-socketServer.on("connection", (socketClient) => {
+//el servidor recibe a const=products linea 15 del archivo main.js y crea el post
+io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado");
 
-    socketClient.on('new product', (product) => {
-        console.log('new product: ' + product);
-      // Aquí puedes emitir el nuevo producto a todos los clientes conectados
-        socketServer.emit('new product', product);
+    //recibimos el evento del archivo main.js
+    socket.on("products_send", async (data) => {
+        console.log(data);
+        try {
+            const products = new Product (
+            data.title,
+            data.description,
+            data.price,
+            data.thumbnail,
+            data.code,
+            data.stock,
+            );
+            await productManager.saveFile(products);// método del archivo ProductManager
+            socket.emit("products", productManager.getProducts());// método del archivo ProductManager
+        } catch (error) {
+            console.log(error);
+        }
     });
 
-    socketClient.on('delete product', (productId) => {
-        console.log('delete product: ' + productId);
-      // Aquí puedes emitir la eliminación del producto a todos los clientes conectados
-        socketServer.emit('delete product', productId);
-    });
+    socket.emit("products", productManager.getProducts()) //con este evento se envian todos los products y se obtiene del lado del cliente (main.js)
 });
 
