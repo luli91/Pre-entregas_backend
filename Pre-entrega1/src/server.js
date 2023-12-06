@@ -55,16 +55,16 @@ io.on("connection", (socket) => {
     socket.on("products_send", async (data) => {
         console.log(data);
         try {
-            const products = new Product (
-            data.title,
-            data.description,
-            data.price,
-            data.thumbnail,
-            data.code,
-            data.stock,
+            const products = new Product(
+                data.title,
+                data.description,
+                data.price,
+                data.thumbnail,
+                data.code,
+                data.stock,
             );
-            await productManager.saveFile(products);// método del archivo ProductManager
-            socket.emit("products", productManager.getProducts());// método del archivo ProductManager
+              await productManager.addProduct(products); // Cambio el método saveFile() por addProduct()
+              socket.emit('products', [products]); // Devuelvo solo el último producto agregado
         } catch (error) {
             console.log(error);
         }

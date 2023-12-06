@@ -30,8 +30,10 @@ form.addEventListener("submit", (e) => {
 socket.on("products", (data) => {
     const products = document.querySelector("#products");
     console.log(data);
-    const p = document.createElement("p");
-    p.innerHTML = `${data.title} - ${data.description} - ${data.price} - ${data.thumbnail} - ${data.code} - ${data.stock} - <button id="button-${data.id}"> Eliminar </button>`;
-    products.appendChild(p);
+    data.forEach(product => {
+        const p = document.createElement("p");
+        p.innerHTML = `${product.title} - ${product.description} - ${product.price} - ${product.thumbnail} - ${product.code} - ${product.stock} - <button id="button-${product.id}"> Eliminar </button>`;
+        products.appendChild(p);
+    });
 });
 

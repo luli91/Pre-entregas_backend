@@ -7,11 +7,10 @@ export default class ProductManager{
         this.currentId = 1;
         if(fs.existsSync(path)){
             try{
-                let products= fs.readFileSync(path, "utf8");
-                this.products = JSON.parse(products); 
+                let products = fs.readFileSync(path, "utf8");
+                this.products = Array.isArray(products) ? JSON.parse(products) : [JSON.parse(products)];
             } catch (error) {
                 this.products = [];
-                
             }
         } else {
             this.products = [];
