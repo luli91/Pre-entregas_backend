@@ -8,7 +8,10 @@ export default class ProductManager{
         if(fs.existsSync(path)){
             try{
                 let products = fs.readFileSync(path, "utf8");
-                this.products = Array.isArray(products) ? JSON.parse(products) : [JSON.parse(products)];
+                this.products = JSON.parse(products);
+                if (!Array.isArray(this.products)) {
+                    throw new Error('Los productos deben ser un array');
+                }
             } catch (error) {
                 this.products = [];
             }
@@ -17,7 +20,6 @@ export default class ProductManager{
             fs.writeFileSync(path, JSON.stringify(this.products, null, "\t"));
         }
     }
-
 
     async saveFile(data) {
         try {
@@ -41,15 +43,13 @@ export default class ProductManager{
 
 
     if (existingProduct) {
-
         return {error: "El producto ya existe"};
-    
     }
 
         product.id = this.currentId++;
         this.products.push(product);
         const respuesta = await this.saveFile(this.products);
-        return respuesta;
+        return respuesta ? product : {error: "Error al guardar el producto"};
     }
 
     getProducts() {

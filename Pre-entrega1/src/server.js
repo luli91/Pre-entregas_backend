@@ -63,8 +63,9 @@ io.on("connection", (socket) => {
                 data.code,
                 data.stock,
             );
-              await productManager.addProduct(products); // Cambio el método saveFile() por addProduct()
-              socket.emit('products', [products]); // Devuelvo solo el último producto agregado
+            await productManager.addProduct(products); // Agrega el producto a la memoria
+            await productManager.saveFile(productManager.getProducts()); // Guarda los productos en el archivo
+              io.emit('products', [products]); // Devuelvo solo el último producto agregado, utilizo io  para que se envíe a todos los clientes conectados
         } catch (error) {
             console.log(error);
         }

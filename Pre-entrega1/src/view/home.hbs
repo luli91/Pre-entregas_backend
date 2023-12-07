@@ -1,5 +1,8 @@
 <div>
-    <h1>
-        Home
-    </h1>
+    <h1>Home</h1>
+    <ul>
+        {{#each products}}
+        <li>{{this.title}} - {{this.description}} - {{this.price}} - {{this.thumbnail}} - {{this.code}} - {{this.stock}}</li>
+        {{/each}}
+    </ul>
 </div>
