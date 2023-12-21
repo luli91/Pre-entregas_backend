@@ -1,24 +1,36 @@
 import express from 'express';
-import carts from "./routes/carts.js";
-import products from "./routes/products.js";
-import ProductManager from './manager/ProductManager.js';
-import { Product } from './manager/ProductManager.js';
+import messageRouter from "./routes/message.routes.js";
+import productsRouter from "./routes/products.routes.js";
+// import ProductManager from './manager/ProductManager.js';
+// import { Product } from './manager/ProductManager.js';
 import handlebars from "express-handlebars";
 import { __dirname } from "./dirname.js";
-import { Server } from "socket.io";
-import viewsRouter from "./routes/views.routes.js";
+import mongoose from 'mongoose';
+// import { Server } from "socket.io";
+// import viewsRouter from "./routes/views.routes.js";
 
 
 const app = express ();
-const PORT = 8080;
-//movimos el app.listen
-const httpServer = app.listen(PORT, () =>
-    console.log(`Server listening on port ${PORT}`)
-);
+// const PORT = 8080;
+// //movimos el app.listen
+// const httpServer = app.listen(PORT, () =>
+//     console.log(`Server listening on port ${PORT}`)
+// );
 
-// Instanciar Websocket
-//creamos un servidor para sockets viviendo dentro de nuestro servidor principal
-const io = new Server(httpServer);
+// // Instanciar Websocket
+// //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
+// const io = new Server(httpServer);
+
+mongoose
+.connect("mongodb://127.0.0.1:27017/ecommerce")
+.then(() =>{
+    console.log("conected DB");
+})
+.catch((error)=> {
+    console.log(error);
+    console.log("error connecting DB");
+});
+
 
 // Middlewares(envian info por medio de post)
 app.use(express.json())
@@ -38,39 +50,41 @@ app.set("views", `${__dirname}/view`);
 //public- la carpeta que es acessible al cliente
 app.use(express.static(`${__dirname}/public`));
 
+
 //routes
-app.use('/api/carts', carts);
-app.use('/api/products', products);
-app.use('/', viewsRouter);
+app.use('/api/messages', messageRouter);
+app.use('/api/products', productsRouter);
+// app.use('/', viewsRouter);
 
-//instanciamos el manager
+app.listen(5000, ()=> console.log("server listening on port 5000"));
 
-const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
+// //instanciamos el manager
 
-//el servidor recibe a const=products linea 15 del archivo main.js y crea el post
-io.on("connection", (socket) => {
-    console.log("Nuevo cliente conectado");
+// const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
-    //recibimos el evento del archivo main.js
-    socket.on("products_send", async (data) => {
-        console.log(data);
-        try {
-            const products = new Product(
-                data.title,
-                data.description,
-                data.price,
-                data.thumbnail,
-                data.code,
-                data.stock,
-            );
-            await productManager.addProduct(products); // Agrega el producto a la memoria
-            await productManager.saveFile(productManager.getProducts()); // Guarda los productos en el archivo
-              io.emit('products', [products]); // Devuelvo solo el último producto agregado, utilizo io  para que se envíe a todos los clientes conectados
-        } catch (error) {
-            console.log(error);
-        }
-    });
+// //el servidor recibe a const=products linea 15 del archivo main.js y crea el post
+// io.on("connection", (socket) => {
+//     console.log("Nuevo cliente conectado");
 
-    socket.emit("products", productManager.getProducts()) //con este evento se envian todos los products y se obtiene del lado del cliente (main.js)
-});
+//     //recibimos el evento del archivo main.js
+//     socket.on("products_send", async (data) => {
+//         console.log(data);
+//         try {
+//             const products = new Product(
+//                 data.title,
+//                 data.description,
+//                 data.price,
+//                 data.thumbnail,
+//                 data.code,
+//                 data.stock,
+//             );
+//             await productManager.addProduct(products); // Agrega el producto a la memoria
+//             await productManager.saveFile(productManager.getProducts()); // Guarda los productos en el archivo
+//               io.emit('products', [products]); // Devuelvo solo el último producto agregado, utilizo io  para que se envíe a todos los clientes conectados
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     });
 
+//     socket.emit("products", productManager.getProducts()) //con este evento se envian todos los products y se obtiene del lado del cliente (main.js)
+// });

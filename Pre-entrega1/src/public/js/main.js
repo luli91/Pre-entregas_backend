@@ -36,4 +36,3 @@ socket.on("products", (data) => {
         products.appendChild(p);
     });
 });
-
