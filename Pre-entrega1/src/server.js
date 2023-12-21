@@ -6,20 +6,20 @@ import productsRouter from "./routes/products.routes.js";
 import handlebars from "express-handlebars";
 import { __dirname } from "./dirname.js";
 import mongoose from 'mongoose';
-// import { Server } from "socket.io";
-// import viewsRouter from "./routes/views.routes.js";
+import { Server } from "socket.io";
+import viewsRouter from "./routes/views.routes.js";
 
 
 const app = express ();
-// const PORT = 8080;
+const PORT = 5000;
 // //movimos el app.listen
-// const httpServer = app.listen(PORT, () =>
-//     console.log(`Server listening on port ${PORT}`)
-// );
+const httpServer = app.listen(PORT, () =>
+    console.log(`Server listening on port ${PORT}`)
+);
 
-// // Instanciar Websocket
-// //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
-// const io = new Server(httpServer);
+// Instanciar Websocket
+//creamos un servidor para sockets viviendo dentro de nuestro servidor principal
+const io = new Server(httpServer);
 
 mongoose
 .connect("mongodb://127.0.0.1:27017/ecommerce")
@@ -54,17 +54,41 @@ app.use(express.static(`${__dirname}/public`));
 //routes
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
-// app.use('/', viewsRouter);
+app.use('/', viewsRouter);
 
-app.listen(5000, ()=> console.log("server listening on port 5000"));
+//app.listen(5000, ()=> console.log("server listening on port 5000"));
 
 // //instanciamos el manager
 
 // const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
 // //el servidor recibe a const=products linea 15 del archivo main.js y crea el post
-// io.on("connection", (socket) => {
-//     console.log("Nuevo cliente conectado");
+const messageSchema = new mongoose.Schema({
+    user: String,
+    message: String
+});
+
+const Message = mongoose.model('messages', messageSchema);
+
+io.on("connection", (socket) => {
+    console.log("Nuevo usuario conectado");
+
+    // Muestro mensajes antiguos
+    Message.find().then((messages) => {
+        socket.emit('messages', messages);
+    });
+
+    socket.on("message", (data) => {
+        console.log(data);
+        const message = new Message(data);
+
+        //Envio mensajes a todos los clientes
+        message.save().then(() => {
+            io.emit('message', data);
+        }).catch((error) => console.log(error));
+    });
+    socket.emit("message", Message);
+});
 
 //     //recibimos el evento del archivo main.js
 //     socket.on("products_send", async (data) => {
@@ -84,7 +108,6 @@ app.listen(5000, ()=> console.log("server listening on port 5000"));
 //         } catch (error) {
 //             console.log(error);
 //         }
-//     });
 
 //     socket.emit("products", productManager.getProducts()) //con este evento se envian todos los products y se obtiene del lado del cliente (main.js)
 // });
