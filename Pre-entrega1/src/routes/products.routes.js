@@ -63,7 +63,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const products = await productDao.deletePost(id);
+        const products = await productDao.delete(id);
 
         res.json({
         products,

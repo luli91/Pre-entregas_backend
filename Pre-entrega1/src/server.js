@@ -9,6 +9,8 @@ import mongoose from 'mongoose';
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
 
+import MessageDao from './daos/dbManager/message.dao.js';
+
 
 const app = express ();
 const PORT = 5000;
@@ -63,31 +65,29 @@ app.use('/', viewsRouter);
 // const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
 // //el servidor recibe a const=products linea 15 del archivo main.js y crea el post
-const messageSchema = new mongoose.Schema({
-    user: String,
-    message: String
-});
+// const messageSchema = new mongoose.Schema({
+//     user: String,
+//     message: String
+// });
 
-const Message = mongoose.model('messages', messageSchema);
+// const Message = mongoose.model('messages', messageSchema);
 
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");
 
     // Muestro mensajes antiguos
-    Message.find().then((messages) => {
+    MessageDao.findMessages().then((messages) => {
         socket.emit('messages', messages);
     });
 
     socket.on("message", (data) => {
         console.log(data);
-        const message = new Message(data);
 
         //Envio mensajes a todos los clientes
-        message.save().then(() => {
+        MessageDao.createMessage(data).then(() => {
             io.emit('message', data);
         }).catch((error) => console.log(error));
     });
-    socket.emit("message", Message);
 });
 
 //     //recibimos el evento del archivo main.js

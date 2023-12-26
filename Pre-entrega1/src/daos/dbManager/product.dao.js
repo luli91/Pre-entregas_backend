@@ -8,7 +8,7 @@ class ProductDao {
     }
 
     async createProduct(product) {
-        return await productModel.findById(product);
+        return await productModel.create(product);
     }
 
     async updateProduct(_id, product) {
