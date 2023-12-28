@@ -58,19 +58,7 @@ app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/', viewsRouter);
 
-//app.listen(5000, ()=> console.log("server listening on port 5000"));
 
-// //instanciamos el manager
-
-// const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
-
-// //el servidor recibe a const=products linea 15 del archivo main.js y crea el post
-// const messageSchema = new mongoose.Schema({
-//     user: String,
-//     message: String
-// });
-
-// const Message = mongoose.model('messages', messageSchema);
 
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");
@@ -89,25 +77,3 @@ io.on("connection", (socket) => {
         }).catch((error) => console.log(error));
     });
 });
-
-//     //recibimos el evento del archivo main.js
-//     socket.on("products_send", async (data) => {
-//         console.log(data);
-//         try {
-//             const products = new Product(
-//                 data.title,
-//                 data.description,
-//                 data.price,
-//                 data.thumbnail,
-//                 data.code,
-//                 data.stock,
-//             );
-//             await productManager.addProduct(products); // Agrega el producto a la memoria
-//             await productManager.saveFile(productManager.getProducts()); // Guarda los productos en el archivo
-//               io.emit('products', [products]); // Devuelvo solo el último producto agregado, utilizo io  para que se envíe a todos los clientes conectados
-//         } catch (error) {
-//             console.log(error);
-//         }
-
-//     socket.emit("products", productManager.getProducts()) //con este evento se envian todos los products y se obtiene del lado del cliente (main.js)
-// });

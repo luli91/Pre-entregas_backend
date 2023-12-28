@@ -1,16 +1,21 @@
 import { Router } from "express";
-import ProductManager from '../manager/ProductManager.js';
+
 
 const router = Router();
-const productManager = new ProductManager('./Pre-entrega1/src/data/productos.json');
 
-router.get("/", async (req, res) => {
-    let products = await productManager.getProducts(); // obtén tus productos de alguna manera
-    res.render('home', {products: products}); // renderiza tu plantilla con tus datos
+router.get('/products', async (req, res) => {
+    let { limit, page } = req.query;
+    limit = limit ? parseInt(limit) : 10;
+    page = page ? parseInt(page) : 1;
+    const products = await productDao.getProducts({ limit, page });
+    res.render('products', { products: products.payload, pagination: products });
 });
 
-router.get("/realtimeproducts", (req, res) => {
-    res.render("products.hbs");
+router.get('/carts/:cid', async (req, res) => {
+    const { cid } = req.params;
+    const cart = await cartDao.getCartById(cid);
+    res.render('cart', { cart });
 });
+
 
 export default router;

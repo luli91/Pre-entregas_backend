@@ -6,7 +6,8 @@ const cartSchema = new Schema({
         quantity: { type: Number, required: true, min: 1 }
     }],
 });
-
+//biblioteca que proporciona funcionalidad de paginación para los modelos de Mongoose
+cartSchema.plugin(mongoosePaginate); 
 
 const cartModel = model("cart", cartSchema);
 
