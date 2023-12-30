@@ -1,6 +1,7 @@
 import express from 'express';
 import messageRouter from "./routes/message.routes.js";
 import productsRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/carts.routes.js";
 // import ProductManager from './manager/ProductManager.js';
 // import { Product } from './manager/ProductManager.js';
 import handlebars from "express-handlebars";
@@ -56,6 +57,7 @@ app.use(express.static(`${__dirname}/public`));
 //routes
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/carts', cartRouter);
 app.use('/', viewsRouter);
 
 

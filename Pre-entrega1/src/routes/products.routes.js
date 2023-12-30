@@ -7,14 +7,14 @@ const router = Router();
 
 router.get("/", async (req, res) => {
     try {
-        let { limit, page, sort, title, minStock } = req.query;
+        let { limit, page, sort, category, minStock } = req.query;
 
-        // Establecer valores predeterminados
+        // Establece valores predeterminados
         limit = limit ? parseInt(limit) : 10;
         page = page ? parseInt(page) : 1;
         sort = sort ? { price: sort === 'asc' ? 1 : -1 } : {};
 
-        // Crear el objeto de consulta
+        // Crea el objeto de consulta
         let query = {};
         if (category) {
             query.category = category;
@@ -23,13 +23,17 @@ router.get("/", async (req, res) => {
             query.stock = { $gte: minStock };
         }
 
-        // Calcular el número de documentos a omitir
-        const skip = (page - 1) * limit;
+        // Crea el objeto de opciones para paginate
+        const options = {
+            page,
+            limit,
+            sort
+        };
 
-        // Realizar la consulta con los parámetros
-        const result = await productDao.findProduct(query, sort, skip, limit);
+        // Realiza la consulta con los parámetros
+        const result = await productDao.findProduct(query, options);
 
-        // Crear el objeto de respuesta
+        // Crea el objeto de respuesta
         const response = {
             status: 'success',
             payload: result.docs,
