@@ -16,7 +16,7 @@ class ProductDao {
     }
 
     async updateProduct(_id, product) {
-        return await productModel.findOneAndUpdate(_id,product);
+        return await productModel.findOneAndUpdate({ _id },product);
     }
 
     async delete(_id) {

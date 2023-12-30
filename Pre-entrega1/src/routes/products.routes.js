@@ -4,6 +4,14 @@ import productDao from '../daos/dbManager/product.dao.js';
 
 const router = Router();
 
+router.get('/:pid', async (req, res) => {
+    const { pid } = req.params;
+    const product = await productDao.findById(pid);
+    if (!product) {
+        return res.status(404).json({ error: 'Producto no encontrado' });
+    }
+    res.json(product);
+});
 
 router.get("/", async (req, res) => {
     try {

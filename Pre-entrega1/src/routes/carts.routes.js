@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import CartDao from '../dao/dbmanager/CartDao.js'
+import CartDao from '../daos/dbManager/cart.dao.js'
 
 const router = Router();
-const cartDao = new CartDao();
+const cartDao = CartDao;
 
 router.post('/', async (req, res) => {
     const cart = await cartDao.createCart({ products: [] });
