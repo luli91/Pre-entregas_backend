@@ -1,7 +1,12 @@
 import { Router } from "express";
+import messageDao from "../daos/dbManager/message.dao.js";
 
 
 const router = Router();
+
+router.get("/", (req, res) => {
+    res.render("home", {});
+});
 
 router.get('/products', async (req, res) => {
     let { limit, page } = req.query;
