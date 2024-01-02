@@ -34,9 +34,10 @@ router.delete('/:cid/products/:pid', async (req, res) => {
 
 router.put('/:cid', async (req, res) => {
     const { cid } = req.params;
-    const respuesta = await cartDao.updateCart(cid, req.body);
+    const cart = req.body; // req.body es el nuevo array de productos
+    const respuesta = await cartDao.updateCart(cid, cart);
     if (respuesta) {
-        res.json({ status: 'Carrito actualizado' });
+        res.json({ status: 'Carrito actualizado', cart: respuesta });
     } else {
         res.status(500).json({ error: 'Hubo un error al actualizar el carrito' });
     }
@@ -63,6 +64,16 @@ router.delete('/:cid', async (req, res) => {
     }
 });
 
+router.post('/:cid/product/:pid', async (req, res) => {
+    const { cid, pid } = req.params;
+    const product = { product: pid, quantity: 1 };
+    const respuesta = await cartDao.addProductToCart(cid, product);
+    if (respuesta) {
+        res.json({ status: 'Producto agregado al carrito' });
+    } else {
+        res.status(500).json({ error: 'Hubo un error al agregar el producto al carrito' });
+    }
+});
 
 export default router;
 

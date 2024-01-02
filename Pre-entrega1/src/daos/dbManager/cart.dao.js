@@ -14,7 +14,7 @@ class CartDao {
     }
 
     async updateCart(_id, cart) {
-        return await cartModel.findByIdAndUpdate({ _id }, cart);
+        return await cartModel.findByIdAndUpdate(_id, {products: cart});
     }
 
     async addProductToCart(_id, product) {
@@ -27,10 +27,10 @@ class CartDao {
         const productInCart = cart.products.find(p => p.product.toString() === product.product);
         if (productInCart) {
             // si el producto ya está en el carrito, aumento la cantidad
-            productInCart.quantity++;
+            productInCart.quantity += product.quantity;
         } else {
-            // Si el producto no está en el carrito, lo agrego con cantidad 1
-            cart.products.push(product);
+            console.error("Producto no encontrado en el carrito");
+        return;
         }
 
         return await this.updateCart(_id, cart);

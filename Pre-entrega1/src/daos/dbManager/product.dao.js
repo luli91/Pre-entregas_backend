@@ -4,7 +4,9 @@ import { productModel } from "../../models/product.model.js";
 
 class ProductDao {
 
-    //este metodo ahora acepta parámetros para query (el filtro de búsqueda), sort (el ordenamiento), skip (la cantidad de documentos a omitir para la paginación) y limit (la cantidad máxima de documentos a devolver). Luego, utiliza estos parámetros para realizar una consulta a la base de datos.
+    async findById(pid) {
+        return await productModel.findById(pid);
+    }
     
     async findProduct(query, options) {
         return await productModel.paginate(query, options);
