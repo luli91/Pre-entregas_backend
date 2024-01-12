@@ -55,7 +55,7 @@ app.set("views", `${__dirname}/view`);
 //public- la carpeta que es acessible al cliente
 app.use(express.static(`${__dirname}/public`));
 
-
+const MONGO_URL = "mongodb://127.0.0.1:27017/ecommerce";
 //routes
 app.use(session({
     store: MongoStore.create({
@@ -93,3 +93,14 @@ io.on("connection", (socket) => {
         }).catch((error) => console.log(error));
     });
 });
+
+const connectMongoDB = async () => {
+    try {
+        await mongoose.connect(MONGO_URL)
+        console.log("Conectado con exito a la DB usando Mongoose!!");
+    } catch (error) {
+        console.error("No se pudo conectar a la BD usando Moongose: " + error);
+        process.exit();
+    }
+}
+connectMongoDB();
