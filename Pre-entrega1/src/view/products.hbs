@@ -1,7 +1,21 @@
-{{!-- <div>
-    <h1>
-    Products
-    </h1>
+<div>
+    <h1>Productos</h1>
+    {{#if user}}
+        <p>Bienvenido, {{user.name}}!</p>
+        <button onclick="location.href='/logout'">Logout</button>
+    {{/if}}
+    <ul>
+        {{#each products}}
+            <li>
+                <h2>{{this.title}}</h2>
+                <p>{{this.description}}</p>
+                <p>Precio: {{this.price}}</p>
+                <img src="{{this.thumbnail}}" alt="{{this.title}}">
+            </li>
+        {{/each}}
+    </ul>
+</div>
+
     
 {{!-- para realizar este formulario tome en cuenta las propiedades de Class products del archivo ProductManager.js  --}}
     {{!-- <form>
@@ -24,4 +38,4 @@
     <script src="/js/main.js"></script>
     
 
-</div> --}}
+</div>

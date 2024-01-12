@@ -13,6 +13,12 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get('/cart/:cid', async (req, res) => {
+    const { cid } = req.params;
+    const cart = await cartDao.getCartById(cid);
+    res.render('cart', { cart });
+});
+
 router.get('/:cid', async (req, res) => {
     const { cid } = req.params;
     const cart = await cartDao.getCartById(cid);

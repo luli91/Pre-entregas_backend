@@ -18,6 +18,8 @@
     "socket.io": "^4.7.2"
   },
   "dependencies": {
+    "connect-mongo": "^5.1.0",
+    "express-session": "^1.17.3",
     "mongoose": "^8.0.3",
     "mongoose-paginate-v2": "^1.7.4",
     "sweetalert2": "^11.10.1"

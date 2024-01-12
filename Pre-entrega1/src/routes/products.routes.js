@@ -66,6 +66,12 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get('/products', async (req, res) => {
+    const products = await productDao.findProduct({});
+    res.render('products', { products });
+});
+
+
 router.post("/", async (req, res) => {
     try {
 

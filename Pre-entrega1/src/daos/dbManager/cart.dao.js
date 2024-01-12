@@ -23,18 +23,20 @@ class CartDao {
             console.error("Carrito no encontrado");
             return;
         }
-
-        const productInCart = cart.products.find(p => p.product.toString() === product.product);
-        if (productInCart) {
+    
+        const productInCart = cart.products.findIndex(p => p.product._id.toString() === product.product);
+    
+        if (productInCart !== -1) {
             // si el producto ya está en el carrito, aumento la cantidad
-            productInCart.quantity += product.quantity;
+            cart.products[productInCart].quantity += product.quantity;
         } else {
-            console.error("Producto no encontrado en el carrito");
-        return;
+            // si el producto no está en el carrito, lo agrego
+            cart.products.push(product);
         }
-
-        return await this.updateCart(_id, cart);
+    
+        return await this.updateCart(_id, cart.products);
     }
+    
     //este método podría disminuir la cantidad de un producto en el carrito o eliminarlo completamente si la cantidad es 1.
     async removeProductFromCart(_id, product) {
         const cart = await this.getCartById(_id);
@@ -43,7 +45,7 @@ class CartDao {
             return;
         }
 
-        const productIndex = cart.products.findIndex(p => p.product.toString() === product.product);
+        const productIndex = cart.products.findIndex((p) => p.product._id.toString() === product.product);
         if (productIndex !== -1) {
             // Si el producto está en el carrito, disminuir la cantidad o eliminarlo
             if (cart.products[productIndex].quantity > 1) {
@@ -53,7 +55,7 @@ class CartDao {
             }
         }
 
-        return await this.updateCart(_id, cart);
+        return await this.updateCart(_id, cart.products);
     }
 //este método podria calcular el total del carrito sumando el precio de cada producto multiplicado por su cantidad.
     async getCartTotal(_id) {

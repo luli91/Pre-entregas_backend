@@ -9,8 +9,11 @@ import { __dirname } from "./dirname.js";
 import mongoose from 'mongoose';
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
-
 import MessageDao from './daos/dbManager/message.dao.js';
+import sessionsRouter from './routes/sessions.routes.js';
+import usersViewRouter from './routes/views.routes.js';
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
 
 const app = express ();
@@ -24,8 +27,7 @@ const httpServer = app.listen(PORT, () =>
 //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
 const io = new Server(httpServer);
 
-mongoose
-.connect("mongodb://127.0.0.1:27017/ecommerce")
+mongoose.connect("mongodb://127.0.0.1:27017/ecommerce")
 .then(() =>{
     console.log("conected DB");
 })
@@ -55,11 +57,23 @@ app.use(express.static(`${__dirname}/public`));
 
 
 //routes
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: "mongodb://127.0.0.1:27017/ecommerce",
+        mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+        ttl: 10 * 60 // Tiempo de vida de la sesión en segundos
+    }),
+    secret: 'your-secret-key', // Reemplaza esto con tu propia clave secreta
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}));
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/', viewsRouter);
-
+app.use('/users', usersViewRouter)
+app.use ('/api/sessions', sessionsRouter);
 
 
 io.on("connection", (socket) => {
@@ -75,7 +89,7 @@ io.on("connection", (socket) => {
 
         //Envio mensajes a todos los clientes
         MessageDao.createMessage(data).then(() => {
-            io.emit('message', data);
+            io.emit('messages', data);
         }).catch((error) => console.log(error));
     });
 });
