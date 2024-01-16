@@ -3,6 +3,7 @@
 import { productModel } from "../../models/product.model.js";
 
 class ProductDao {
+    
 
     async findById(pid) {
         return await productModel.findById(pid);
@@ -23,6 +24,16 @@ class ProductDao {
 
     async delete(_id) {
         return await productModel.findByIdAndDelete(_id);
+    }
+    
+    async getProducts({ limit, page }) {
+        const query = {}; // define tu consulta aquí
+        const options = {
+            limit,
+            page,
+            sort: { createdAt: -1 }, // ordena los productos por fecha de creación
+        };
+        return await this.findProduct(query, options);
     }
 }
 

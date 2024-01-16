@@ -68,8 +68,13 @@ router.get("/", async (req, res) => {
 
 router.get('/products', async (req, res) => {
     const products = await productDao.findProduct({});
-    res.render('products', { products });
+    res.render('products', {
+        user: req.session.user,
+        welcomeMessage: `¡Bienvenido ${req.session.user.name}!`,
+        products: products.docs
+    });
 });
+
 
 
 router.post("/", async (req, res) => {

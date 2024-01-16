@@ -25,9 +25,7 @@ router.post('/register', async (req, res) => {
 
     const result = await userModel.create(user);
     res.send({ status: "success", message: "Usuario creado con extito con ID: " + result.id });
-
-    res.redirect('/');
-});
+})
 
 
 // Login
@@ -43,7 +41,7 @@ router.post('/login', async (req, res) => {
         age: user.age
     }
 
-    res.redirect('/');
+    res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
 })
 
 export default router;

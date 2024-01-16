@@ -1,12 +1,14 @@
 
 import { Router } from "express";
 // import messageDao from "../daos/dbManager/message.dao.js";
-// import productDao from "../daos/dbManager/product.dao";
+import productDao from "../daos/dbManager/product.dao.js";
+import cartDao from "../daos/dbManager/cart.dao.js";
+
 
 const router = Router();
 
-router.get("/", (req, res) => {
-    res.redirect("/login");
+router.get('/', (req, res) => {
+    res.render('index', {})
 });
 
 router.get('/products', async (req, res) => {
@@ -38,6 +40,7 @@ router.get('/session', (req, res) => {
     }
 });
 
+
 router.get('/logout', (req, res) => {
     req.session.destroy(error => {
         if (error) {
@@ -48,36 +51,28 @@ router.get('/logout', (req, res) => {
 });
 
 
+
 router.get('/login', (req, res) => {
 
     const { username, password } = req.query
-    // Verifica si el objeto 'user' existe en la sesión. Si no existe, créalo.
-    if (!req.session.user) {
-        req.session.user = {};
-    }
 
-    if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-        req.session.user.role = 'admin';
+    if (username != 'adminCoder@coder.com' || password !== 'adminCod3r123') {
+        return res.status(401).send("Login failed, check your credentianls")
     } else {
-        req.session.user.role = 'usuario';
+        req.session.user = username;
+        req.session.admin = false;
+        res.send('Login Successful!!')
     }
 });
 
-// Middleware de autenticación
+// Middleare auth
 function auth(req, res, next) {
-    // Verifica si el objeto 'user' existe en la sesión. Si no existe, envía un mensaje de error.
-    if (!req.session.user) {
-        return res.status(403).send("Usuario no autorizado para ingresar a este recurso.");
-    }
-
-    // Ahora puedes acceder a 'req.session.user.role' sin obtener un TypeError
-    if (req.session.user.role === 'admin') {
-        return next();
+    if (req.session.user === 'adminCoder@coder.com' && req.session.admin) {
+        return next()
     } else {
         return res.status(403).send("Usuario no autorizado para ingresar a este recurso.");
     }
 }
-
 
 router.get('/private', auth, (req, res) => {
     res.send('Si estas viendo esto es porque estas autorizado a este recurso!')

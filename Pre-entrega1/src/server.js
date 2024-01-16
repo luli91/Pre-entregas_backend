@@ -57,24 +57,25 @@ app.use(express.static(`${__dirname}/public`));
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/ecommerce";
 //routes
+
+
 app.use(session({
     store: MongoStore.create({
         mongoUrl: "mongodb://127.0.0.1:27017/ecommerce",
         mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         ttl: 10 * 60 // Tiempo de vida de la sesión en segundos
     }),
-    secret: 'your-secret-key', // Reemplaza esto con tu propia clave secreta
+    secret: 'coderS3cr3t', 
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: true }
 }));
+
+app.use('/', viewsRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
-app.use('/', viewsRouter);
-app.use('/users', usersViewRouter)
+app.use('/users', usersViewRouter);
 app.use ('/api/sessions', sessionsRouter);
-
 
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");
