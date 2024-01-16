@@ -11,7 +11,7 @@ import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
 import MessageDao from './daos/dbManager/message.dao.js';
 import sessionsRouter from './routes/sessions.routes.js';
-import usersViewRouter from './routes/views.routes.js';
+import usersViewRouter from './routes/users.views.routes.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
@@ -76,6 +76,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
 app.use ('/api/sessions', sessionsRouter);
+
 
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");

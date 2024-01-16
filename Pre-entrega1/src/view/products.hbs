@@ -2,6 +2,7 @@
     <h1>Productos</h1>
     {{#if user}}
         <p>Bienvenido, {{user.name}}!</p>
+        <p>Rol: {{user.role}}</p>
         <button onclick="location.href='/logout'">Logout</button>
     {{/if}}
     <ul>

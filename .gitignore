@@ -1,1 +1,2 @@
 **/node_modules
+# se coloca ** para que todas las carpetas que contengan nodemodules esteb ocultas

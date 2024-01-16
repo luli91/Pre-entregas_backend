@@ -31,17 +31,24 @@ router.post('/register', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-    const user = await userModel.findOne({ email, password }); //Ya que el password no está hasheado, podemos buscarlo directamente
+    const user = await userModel.findOne({ email, password }); 
 
     if (!user) return res.status(401).send({ status: 'error', error: "Incorrect credentials" })
+
+    // Si el usuario es adminCoder@coder.com, asignar el rol de admin
+    if (email === 'adminCoder@coder.com') {
+        user.role = 'admin';
+    }
 
     req.session.user = {
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
-        age: user.age
+        age: user.age,
+        role: user.role
     }
 
-    res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
+    res.redirect('/products')
+    // res.send({ status: "success", payload: req.session.user, message: "¡Primer logueo realizado! :)" });
 })
 
 export default router;
