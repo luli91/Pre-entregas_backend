@@ -14,6 +14,9 @@ import sessionsRouter from './routes/sessions.routes.js';
 import usersViewRouter from './routes/users.views.routes.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import initializePassport from "./config/passport.config.js"
+import githubLoginViewRouter from './routes/github-login.views.routes.js'
 
 
 const app = express ();
@@ -70,12 +73,18 @@ app.use(session({
     saveUninitialized: true,
 }));
 
+//midleware de passport
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', viewsRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
 app.use ('/api/sessions', sessionsRouter);
+app.use("/github", githubLoginViewRouter);
 
 
 io.on("connection", (socket) => {
