@@ -1,13 +1,32 @@
 import passport from 'passport';
-import passportLocal from 'passport-local';
 import userModel from '../models/user.model.js';
-import { createHash, isValidPassword } from '../dirname.js';
 import GitHubStrategy from 'passport-github2';
+import jwtStrategy from 'passport-jwt'
+import { PRIVATE_KEY, createHash, isValidPassword } from '../dirname.js';
+import localStrategy from 'passport-local';
 
-const localStrategy = passportLocal.Strategy;
+
+const  JwtStrategy = jwtStrategy.Strategy;
+const ExtractJWT = jwtStrategy.ExtractJwt;
 
 
 const initializePassport = () => {
+//estrategia para obtener el token por cookie
+    passport.use('jwt' , new JwtStrategy(
+        {
+            jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+            secretOrKey: PRIVATE_KEY
+        }, async (jwt_payload, done) =>{
+            console.log("Entrando a passport Strategy con JWT.");
+            try{
+                console.log("JWT obtenido del Payload");
+                console.log(jwt_payload);
+                return done(null, jwt_payload.user)
+            }catch (error) {
+                return done(error)
+            }
+        }
+    ));
 
     //usando Github para loguearse
     passport.use('github', new GitHubStrategy(
@@ -108,10 +127,20 @@ const initializePassport = () => {
         } catch (error) {
             console.error("Error deserializando el usuario: " + error);
         }
-    })
+    });
 
     // passport.serializeUser((user, done) => {...}): Esta función se utiliza para serializar el usuario, es decir, para guardar la información del usuario en la sesión. En tu caso, estás guardando el _id del usuario en la sesión. 
     // passport.deserializeUser(async (id, done) => {...}): Esta función se utiliza para deserializar el usuario, es decir, para recuperar los datos del usuario de la sesión utilizando el _id que se guardó durante la serialización.
-}
+};
+const cookieExtractor = req =>{
+    let token = null;
+    console.log("entrando a Cookie Extractor");
+    if (req && req.cookies){
+    console.log("cookie presente: ");
+    console.log(req.cookies);
+    token = req.cookie('jwtCookieToken')
+    }
+    return token;
+};
 
 export default initializePassport;

@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
 import MessageDao from './daos/dbManager/message.dao.js';
-import sessionsRouter from './routes/sessions.routes.js';
+import jwtRouter from './routes/jwt.routes.js';
 import usersViewRouter from './routes/users.views.routes.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
@@ -83,7 +83,7 @@ app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
-app.use ('/api/sessions', sessionsRouter);
+app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
 
 
