@@ -26,6 +26,10 @@ const PORT = config.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
 
+const httpServer = app.listen(PORT, () =>
+    console.log(`Server listening on port ${PORT}`)
+)
+
 // Instanciar Websocket
 //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
 const io = new Server(httpServer);
@@ -65,6 +69,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', viewsRouter);
+app.use('/api', routerProduct)
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
@@ -72,9 +77,6 @@ app.use('/users', usersViewRouter);
 app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
 
-const httpServer = app.listen(PORT, () =>
-    console.log(`Server listening on port ${PORT}`)
-)
 
 io.on("connection", (socket) => {
     console.log("Nuevo usuario conectado");
