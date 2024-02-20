@@ -89,4 +89,24 @@
 		"stock": 7,
 		"id": 11
 	}
-]
+];
+
+//metodos
+// recuperarDatos, guardarDatos, deleById
+
+export const recuperarDatos = () =>{
+    return data
+}
+
+export const guardarDato = (dato) => {
+    // Logica de validacion
+    data.push(dato)
+    return dato;
+}
+
+
+export const deleById = () => {
+    // logica
+    // desarrollar logica de JS para: 
+    // - Buscar por el id y luego eliminar el dato
+}

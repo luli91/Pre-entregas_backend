@@ -18,6 +18,8 @@ import passport from 'passport';
 import initializePassport from "./config/passport.config.js"
 import githubLoginViewRouter from './routes/github-login.views.routes.js'
 import dotenv, { config } from 'dotenv';
+import routerProduct from "./routes/products.routes.js";
+
 
 dotenv.config();
 const app = express ();

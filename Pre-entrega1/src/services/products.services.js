@@ -1,7 +1,7 @@
 //importar capa de models 
 import { recuperarDatos, guardarDato, deleById } from '../models/productData.js'
 
-import productDao from '../daos/dbManager/product.dao';
+import productDao from '../daos/dbManager/product.dao.js';
 
 
 export const obtenerDatos = async () => {
@@ -81,7 +81,7 @@ await guardarDato(dato);
 return dato;
 }
 
-const deleteServices = async (id) => {
+export const deleteServices = async (id) => {
     try {
         const { id } = req.params;
         const products = await productDao.delete(id);
