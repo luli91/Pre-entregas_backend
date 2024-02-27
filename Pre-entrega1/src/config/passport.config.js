@@ -10,7 +10,7 @@ const  JwtStrategy = jwtStrategy.Strategy;
 const ExtractJWT = jwtStrategy.ExtractJwt;
 
 
-const initializePassport = () => {
+export const initializePassport = () => {
 //estrategia para obtener el token por cookie
     passport.use('jwt' , new JwtStrategy(
         {
@@ -143,4 +143,6 @@ const cookieExtractor = req =>{
     return token;
 };
 
-export default initializePassport;
+export const passportCall = (strategy) => {
+    return passport.authenticate(strategy);
+};

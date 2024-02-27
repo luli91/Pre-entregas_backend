@@ -14,7 +14,7 @@ import usersViewRouter from './routes/users.views.routes.js';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
-import initializePassport from "./config/passport.config.js"
+import { initializePassport } from './config/passport.config.js';
 import githubLoginViewRouter from './routes/github-login.views.routes.js'
 import dotenv, { config } from 'dotenv';
 import routerProduct from "./routes/products.routes.js";
