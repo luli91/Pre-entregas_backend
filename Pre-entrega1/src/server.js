@@ -6,7 +6,6 @@ import cartRouter from "./routes/carts.routes.js";
 // import { Product } from './manager/ProductManager.js';
 import handlebars from "express-handlebars";
 import { __dirname } from "./dirname.js";
-import mongoose from 'mongoose';
 import { Server } from "socket.io";
 import viewsRouter from "./routes/views.routes.js";
 import MessageDao from './daos/dbManager/message.dao.js';
@@ -19,7 +18,8 @@ import initializePassport from "./config/passport.config.js"
 import githubLoginViewRouter from './routes/github-login.views.routes.js'
 import dotenv, { config } from 'dotenv';
 import routerProduct from "./routes/products.routes.js";
-
+// import MongoSingleton from './config/mongodb_singleton.js';
+import emailRouter from "./routes/email.routes.js";
 
 dotenv.config();
 const app = express ();
@@ -57,7 +57,7 @@ app.use(express.static(`${__dirname}/public`));
 app.use(session({
     store: MongoStore.create({
         mongoUrl: MONGO_URL,
-        mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+        // mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
         ttl: 10 * 60 // Tiempo de vida de la sesión en segundos
     }),
     secret: 'coderS3cr3t', 
@@ -78,6 +78,7 @@ app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
 app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
+app.use('/api/email', emailRouter);
 
 
 io.on("connection", (socket) => {
@@ -98,13 +99,13 @@ io.on("connection", (socket) => {
     });
 });
 
-const connectMongoDB = async () => {
-    try {
-        await mongoose.connect(MONGO_URL)
-        console.log("Conectado con exito a la DB usando Mongoose!!");
-    } catch (error) {
-        console.error("No se pudo conectar a la BD usando Moongose: " + error);
-        process.exit();
-    }
-}
-connectMongoDB();
+// // Conexión a MongoDB usando el patrón Singleton
+//lo comento ya que voy a trabajar con factory
+// const mongoInstance = async () => {
+//     try {
+//         await MongoSingleton.getInstance()
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+// mongoInstance();

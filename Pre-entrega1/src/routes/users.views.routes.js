@@ -28,4 +28,17 @@ router.get("/error", (req, res) => {
     res.render("error");
 });
 
+router.get("/current",
+    passportCall('jwt'), 
+    authorization('user'),
+    (req, res) => {
+        const userDto = {
+            id: req.user.id,
+            name: req.user.name,
+            email: req.user.email,
+        };
+        res.json(userDto);
+    }
+);
+
 export default router;

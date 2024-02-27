@@ -73,5 +73,35 @@ router.get('/private', auth, (req, res) => {
     res.send('Si estas viendo esto es porque estas autorizado a este recurso!')
 });
 
+// Middleware de autorización
+function authorize(role) {
+    return (req, res, next) => {
+        if (req.user.role !== role) {
+            return res.status(403).send('Acceso denegado');
+        }
+        next();
+    }
+}
+
+router.post('/products', passportCall('jwt'), authorize('admin'), (req, res) => {
+    // Sólo el administrador puede crear productos
+});
+
+router.put('/products/:id', passportCall('jwt'), authorize('admin'), (req, res) => {
+    // Sólo el administrador puede actualizar productos
+});
+
+router.delete('/products/:id', passportCall('jwt'), authorize('admin'), (req, res) => {
+    // Sólo el administrador puede eliminar productos
+});
+
+router.post('/chat', passportCall('jwt'), authorize('user'), (req, res) => {
+    // Sólo el usuario puede enviar mensajes al chat
+});
+
+router.post('/cart', passportCall('jwt'), authorize('user'), (req, res) => {
+    // Sólo el usuario puede agregar productos a su carrito
+});
+
 
 export default router;

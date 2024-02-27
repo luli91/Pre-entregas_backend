@@ -1,2 +1,5 @@
 **/node_modules
+/src/config/.env.development
+/src/config/.env.production
+
 # se coloca ** para que todas las carpetas que contengan nodemodules esteb ocultas
