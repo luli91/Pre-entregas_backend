@@ -20,11 +20,13 @@ import dotenv, { config } from 'dotenv';
 import routerProduct from "./routes/products.routes.js";
 // import MongoSingleton from './config/mongodb_singleton.js';
 import emailRouter from "./routes/email.routes.js";
+import usersRouter from './routes/users.routes.js';
+
 
 dotenv.config();
 const app = express ();
 
-const PORT = config.PORT;
+const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
 
@@ -79,6 +81,7 @@ app.use('/users', usersViewRouter);
 app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
 app.use('/api/email', emailRouter);
+app.use("/api/users", usersRouter);
 
 
 io.on("connection", (socket) => {

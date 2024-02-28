@@ -40,4 +40,4 @@ async function initializeUserService() {
 
 initializeUserService();
 
-export { productService };
+export { userService };
