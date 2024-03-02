@@ -1,4 +1,5 @@
 //importa los servicios
+import productDao from '../daos/dbManager/product.dao.js';
 import { obtenerDatos, crearDato, deleteServices } from '../services/products.services.js'
 
 export const getDatosControllers = async (req, res) => {
@@ -12,10 +13,43 @@ export const postDatosControllers = async (req, res) => {
     res.json({dato})
 }
 
-
 export const deleteDatosControllers = async (req, res) => {
     let {id} = req.params;
     await deleteServices (id);
     res.json ({ msj:"delete product"})
 }
 
+export const getProductById = async (req, res) => {
+    const { pid } = req.params;
+    const product = await productDao.findById(pid);
+    if (product) {
+        res.json(product);
+    } else {
+        res.status(404).json({ error: 'Producto no encontrado' });
+    }
+}
+
+export const getProducts = async (req, res) => {
+    const products = await productDao.findProduct({});
+    res.render('products', {
+        user: req.session.user,
+        products: products.docs
+    });
+}
+
+export const updateProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const post = await productDao.updateProduct(id, req.body);
+        res.json({
+            post,
+            message: "Product updated",
+        });
+    } catch (error) {
+        console.log(error);
+        res.json({
+            error,
+            message: "Error",
+        });
+    }
+}

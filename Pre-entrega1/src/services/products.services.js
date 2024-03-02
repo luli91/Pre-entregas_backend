@@ -1,12 +1,8 @@
-//importar capa de models 
-import { recuperarDatos, guardarDato, deleById } from '../models/productData.js'
-
 import productDao from '../daos/dbManager/product.dao.js';
 
 
 export const obtenerDatos = async () => {
     //logica de negocio
-    try {
         let { limit, page, sort, category, minStock } = req.query;
 
         // Establece valores predeterminados
@@ -47,55 +43,23 @@ export const obtenerDatos = async () => {
             nextLink: result.hasNextPage ? `/api/products?page=${result.page + 1}&limit=${limit}` : null
         };
 
-        res.json(response);
-        
-        
-    } catch (error) {
-        console.log(error);
-        res.json({
-            status: 'error',
-            message: "Error",
-        });
+        return response;
     }
-    return await recuperarDatos()
-}
 
-export const crearDato = async (dato) =>{
-    try {
-
+    export const crearDato = async (req) => {
         const products = await productDao.createProduct(req.body);
-
-        res.json({
+    
+        return {
             products,
             message: "Product created",
-        });
-    } catch (error) {
-        console.log(error);
-        res.json({
-            error,
-            message: "Error",
-        });
+        };
     }
-
-await guardarDato(dato);
-return dato;
-}
-
-export const deleteServices = async (id) => {
-    try {
+    export const deleteServices = async (req) => {
         const { id } = req.params;
         const products = await productDao.delete(id);
-
-        res.json({
-        products,
-        message: "Product deleted",
-        });
-    } catch (error) {
-        console.log(error);
-        res.json({
-            error,
-            message: "Error",
-        });
+    
+        return {
+            products,
+            message: "Product deleted",
+        };
     }
-    return await deleById(id);
-}
