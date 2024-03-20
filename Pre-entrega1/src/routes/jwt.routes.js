@@ -3,6 +3,9 @@ import userModel from '../models/user.model.js';
 import passport from 'passport';
 import { isValidPassword } from '../dirname.js';
 import { generateJWToken } from '../dirname.js';
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 const router = Router();
 
@@ -19,7 +22,7 @@ router.get("/githubcallback", passport.authenticate('github', { session: false, 
         role: user.role
     };
     const access_token = generateJWToken(tokenUser);
-    console.log(access_token);
+    logger.info(access_token);
 
     res.cookie('jwtCookieToken', access_token,
         {
@@ -38,8 +41,8 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await userModel.findOne({ email: email });
-        console.log("Usuario encontrado para login:");
-        console.log(user);
+        logger.info("Usuario encontrado para login:");
+        logger.info(user);
         if (!user) {
             console.warn("User doesn't exists with username: " + email);
             return res.status(204).send({ error: "Not found", message: "Usuario no encontrado con username: " + email });
@@ -55,7 +58,7 @@ router.post("/login", async (req, res) => {
             role: user.role
         };
         const access_token = generateJWToken(tokenUser);
-        console.log(access_token);
+        logger.info(access_token);
     
         //guardo el token en una Cookie
         res.cookie('jwtCookieToken', access_token,
@@ -75,7 +78,7 @@ router.post("/login", async (req, res) => {
 
 // Register
 router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {
-    console.log("Registrando usuario:");
+    logger.info("Registrando usuario:");
     res.status(201).send({ status: "success", message: "Usuario creado con extito." });
 })
 

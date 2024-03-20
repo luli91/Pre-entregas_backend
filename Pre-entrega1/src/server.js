@@ -21,18 +21,23 @@ import routerProduct from "./routes/products.routes.js";
 // import MongoSingleton from './config/mongodb_singleton.js';
 import emailRouter from "./routes/email.routes.js";
 import usersRouter from './routes/users.routes.js';
-
+import { addLogger, logger } from './config/addLogger.js'
+import loggerRoutes from './routes/logger.routes.js';
 
 dotenv.config();
 const app = express ();
 
+
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
+// Middleware de logger
+app.use(addLogger);
 
 const httpServer = app.listen(PORT, () =>
-    console.log(`Server listening on port ${PORT}`)
+    logger.info(`Server listening on port ${PORT}`)
 )
+
 
 // Instanciar Websocket
 //creamos un servidor para sockets viviendo dentro de nuestro servidor principal
@@ -73,6 +78,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', viewsRouter);
+app.use('/api', loggerRoutes);
 app.use('/api', routerProduct)
 app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
@@ -82,6 +88,7 @@ app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
 app.use('/api/email', emailRouter);
 app.use("/api/users", usersRouter);
+
 
 
 

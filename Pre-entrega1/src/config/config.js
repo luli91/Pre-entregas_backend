@@ -1,5 +1,8 @@
 import dotenv from 'dotenv';
 import { Command } from 'commander';
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 const program = new Command(); //Crea la instancia de comandos de commander.
 
@@ -9,8 +12,8 @@ program
     .option('--mode <mode>', 'Modo de trabajo', 'dev')
 program.parse();
 
-console.log("Environment Mode Option: ", program.opts().mode);
-console.log("Persistence Mode Option: ", program.opts().persist);
+logger.info("Environment Mode Option: ", program.opts().mode);
+logger.info("Persistence Mode Option: ", program.opts().persist);
 
 const environment = program.opts().mode;
 
@@ -18,8 +21,8 @@ dotenv.config({
     path: environment === "prod" ? "./src/config/.env.production" : "./src/config/.env.development"
 });
 
-console.log("PERSISTENCE:::");
-console.log(program.opts().persist);
+logger.info("PERSISTENCE:::");
+logger.info(program.opts().persist);
 
 export default {
     port: process.env.PORT,

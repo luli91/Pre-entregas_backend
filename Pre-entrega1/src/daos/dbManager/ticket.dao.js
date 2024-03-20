@@ -1,5 +1,7 @@
 import Ticket from '../../models/ticket.model.js'
+import { getLogger } from '../../config/loggerConfig.js';
 
+const logger = getLogger();
 
 class TicketDao {
     async saveTicket(ticketData) {
@@ -8,7 +10,7 @@ class TicketDao {
             await newTicket.save();
             return newTicket; 
         } catch (error) {
-            console.error('Error al guardar el ticket:', error);
+            logger.error('Error al guardar el ticket:', error);
             throw error; 
         }
     }
@@ -18,7 +20,7 @@ class TicketDao {
             const ticket = await Ticket.findById(ticketId);
             return ticket;
         } catch (error) {
-            console.error('Error al obtener el ticket por ID:', error);
+            logger.error('Error al obtener el ticket por ID:', error);
             throw error;
         }
     }
@@ -28,7 +30,7 @@ class TicketDao {
             const ticket = await Ticket.findByIdAndUpdate(ticketId, updatedData, { new: true });
             return ticket;
         } catch (error) {
-            console.error('Error al actualizar el ticket:', error);
+            logger.error('Error al actualizar el ticket:', error);
             throw error;
         }
     }
@@ -38,7 +40,7 @@ class TicketDao {
             const deletedTicket = await Ticket.findByIdAndDelete(ticketId);
             return deletedTicket;
         } catch (error) {
-            console.error('Error al eliminar el ticket:', error);
+            logger.error('Error al eliminar el ticket:', error);
             throw error;
         }
     }
@@ -48,7 +50,7 @@ class TicketDao {
             const tickets = await Ticket.find();
             return tickets;
         } catch (error) {
-            console.error('Error al obtener todos los tickets:', error);
+            logger.error('Error al obtener todos los tickets:', error);
             throw error;
         }
     }

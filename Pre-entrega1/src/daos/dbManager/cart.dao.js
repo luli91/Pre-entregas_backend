@@ -1,4 +1,7 @@
 import { cartModel } from "../../models/cart.model.js";
+import { getLogger } from '../../config/loggerConfig.js';
+
+const logger = getLogger();
 
 class CartDao {
     async findCarts() {
@@ -20,7 +23,7 @@ class CartDao {
     async addProductToCart(_id, product) {
         const cart = await this.getCartById(_id);
         if (!cart) {
-            console.error("Carrito no encontrado");
+            logger.error("Carrito no encontrado");
             return;
         }
     
@@ -41,7 +44,7 @@ class CartDao {
     async removeProductFromCart(_id, product) {
         const cart = await this.getCartById(_id);
         if (!cart) {
-            console.error("Carrito no encontrado");
+            logger.error("Carrito no encontrado");
             return;
         }
 
@@ -61,7 +64,7 @@ class CartDao {
     async getCartTotal(_id) {
         const cart = await this.getCartById(_id);
         if (!cart) {
-            console.error("Carrito no encontrado");
+            logger.error("Carrito no encontrado");
             return;
         }
 

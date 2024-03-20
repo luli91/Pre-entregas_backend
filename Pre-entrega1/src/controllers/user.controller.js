@@ -12,6 +12,9 @@ import { userService } from '../services/sevice.js';
 import CustomError from "../services/errors/custom.errors.js";
 import EErrors from "../services/errors/errors-enum.js";
 import { generateUserErrorInfo } from "../services/errors/messages/user-creation-error.message.js";
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 const users = [];
 
@@ -19,7 +22,7 @@ export const getUsers = (req, res) => {
     try {
         res.send({ message: "Success!", payload: users });
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         res.status(500).send({ error: error, message: "No se pudo obtener los usuarios." });
     }
 
@@ -30,7 +33,7 @@ export async function getAllUser(req, res) {
         let user = await userService.getAll();
         res.send(user);
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         res.status(500).send({ error: error, message: "No se pudo obtener los usuarios." });
     }
 }
@@ -38,7 +41,6 @@ export async function getAllUser(req, res) {
 export const saveUser = (req, res) => {
     try {
 
-        // console.log(req.body);
         const { first_name, last_name, age, email } = req.body;
 
         //respuesta de error!
@@ -70,7 +72,7 @@ export const saveUser = (req, res) => {
         res.status(201).send({ status: "success", payload: userDto });
 
     } catch (error) {
-        console.error(error.cause);
+        logger.error(error.cause);
         res.status(500).send({ error: error.code, message: error.message });
     }
 }

@@ -1,5 +1,8 @@
 import { Router } from "express";
 import messageDao from "../daos/dbManager/message.dao.js";
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 const router = Router();
 
@@ -12,7 +15,7 @@ router.get("/", async (req, res) => {
         message: "messages list",
         });
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.json({
         error,
         message: "Error",
@@ -32,7 +35,7 @@ router.get("/:id", async (req, res) => {
             message: "message found",
     });
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.json({
         error,
         message: "Error",
@@ -42,7 +45,7 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
     try {
-        console.log(req.body);
+        logger.info(req.body);
         const message = await messageDao.createMessage(req.body);
 
     res.json({
@@ -50,7 +53,7 @@ router.post("/", async (req, res) => {
         message: "User created",
     });
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.json({
         error,
         message: "Error",
@@ -71,7 +74,7 @@ router.put("/:id", async (req, res) => {
         message: "message updated",
         });
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.json({
         error,
         message: "Error",
@@ -89,7 +92,7 @@ router.delete("/:id", async (req, res) => {
         message: "message deleted",
     });
     } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.json({
         error,
         message: "Error",

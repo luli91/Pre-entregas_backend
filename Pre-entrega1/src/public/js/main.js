@@ -1,4 +1,7 @@
 const socket = io();
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 const chatbox = document.querySelector("#chatbox")
 let user;
@@ -13,7 +16,7 @@ Swal.fire ({
     allowOutsideClick : false,
 }).then ((value) => {
     user = value.value
-    console.log(user);
+    logger.info(user);
 });
 
 //aca tomo el valor del input y lo mando al servidor mediante websocket 
@@ -35,5 +38,5 @@ socket.on("messages", (data)=> {
         messages += `<strong>${message.user}</strong>: ${message.message} <br />`;
     });
     log.innerHTML =messages;
-    console.log(data);
+    logger.info(data);
 })

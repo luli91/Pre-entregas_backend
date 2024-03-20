@@ -1,4 +1,8 @@
 import fs from 'fs';
+import { getLogger } from './config/loggerConfig.js';
+
+const logger = getLogger();
+
 
 export default class ProductManager{
     constructor (path) {
@@ -26,7 +30,7 @@ export default class ProductManager{
             await fs.promises.writeFile(this.path, JSON.stringify(data, null, "\t"));
             return true;
         } catch (error) {
-            console.log(error);
+            logger.error(error);
             return false;
         }
     }
@@ -63,12 +67,12 @@ export default class ProductManager{
                 return product;
             }
         }
-        console.error("Producto no encontrado");
+        logger.error("Producto no encontrado");
     }
     async deleteProduct(id) {
         const productIndex = this.products.findIndex(product => product.id === id);
         if (productIndex === -1) {
-            console.error("Producto no encontrado");
+            logger.error("Producto no encontrado");
             return;
         }
 

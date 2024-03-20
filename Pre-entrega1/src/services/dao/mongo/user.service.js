@@ -1,8 +1,12 @@
 import userModel from "./models/user.js";
+import { getLogger } from '../../../config/loggerConfig.js';
+
+const logger = getLogger();
+
 
 export default class UserServiceMongo {
     constructor() {
-        console.log("Working users with Database persistence in mongodb");
+        logger.info("Working users with Database persistence in mongodb");
     }
 
     getAll = async () => {
@@ -20,9 +24,9 @@ export default class UserServiceMongo {
     };
 
     update = async (filter, value) => {
-        console.log("Update student with filter and value:");
-        console.log(filter);
-        console.log(value);
+        logger.info("Update student with filter and value:");
+        logger.info(filter);
+        logger.info(value);
         let result = await userModel.updateOne(filter, value);
         return result;
     }

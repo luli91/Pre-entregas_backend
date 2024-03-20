@@ -1,4 +1,7 @@
 const form = document.getElementById('loginForm');
+import { getLogger } from '../../config/loggerConfig.js';
+
+const logger = getLogger();
 
 form.addEventListener('submit', e => {
     e.preventDefault();
@@ -16,13 +19,13 @@ form.addEventListener('submit', e => {
             result.json()
                 .then(json => {
                     //cookie
-                    console.log("Cookies generadas:");
-                    console.log(document.cookie);
+                    logger.info("Cookies generadas:");
+                    logger.info(document.cookie);
                     alert("Login realizado con exito!");
                     window.location.replace('/users');
                 });
         } else if (result.status === 401) {
-            console.log(result);
+            logger.info(result);
             alert("Login invalido revisa tus credenciales!");
         }
     })

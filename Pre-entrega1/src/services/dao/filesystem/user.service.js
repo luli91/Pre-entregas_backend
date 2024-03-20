@@ -1,5 +1,8 @@
 import __dirname from '../../../dirname.js';
 import fileSystem from 'fs';
+import { getLogger } from '../../../config/loggerConfig.js';
+
+const logger = getLogger();
 
 export default class userService {
     #user;
@@ -25,8 +28,8 @@ export default class userService {
     }
 
     save = async (user) => {
-        console.log("Guardar recurso:");
-        console.log(user);
+        logger.info("Guardar recurso:");
+        logger.info(user);
         user.id = Math.floor(Math.random() * 20000 + 1);
         try {
             await this.#prepararDirectorioBase();
@@ -37,7 +40,7 @@ export default class userService {
             return user;
 
         } catch (error) {
-            console.error(`Error guardando recurso: ${JSON.stringify(userNuevo)}, detalle del error: ${error}`);
+            logger.error(`Error guardando recurso: ${JSON.stringify(userNuevo)}, detalle del error: ${error}`);
             throw Error(`Error guardando recurso: ${JSON.stringify(userNuevo)}, detalle del error: ${error}`);
         }
     }
@@ -51,13 +54,13 @@ export default class userService {
             //Cargamos los usero encontrados para agregar el nuevo:
             //Obtenemos el JSON String 
             //console.info("Archivo JSON obtenido desde archivo: ");
-            console.log(data);
+            logger.info(data);
             this.#user = JSON.parse(data);
-            console.log("Productos encontrados: ");
-            console.log(this.#user);
+            logger.info("Productos encontrados: ");
+            logger.info(this.#user);
             return this.#user;
         } catch (error) {
-            console.error(`Error consultando los puser por archivo, valide el archivo: ${this.#dirPath}, 
+            logger.error(`Error consultando los puser por archivo, valide el archivo: ${this.#dirPath}, 
                 detalle del error: ${error}`);
             throw Error(`Error consultando los puser por archivo, valide el archivo: ${this.#dirPath},
             detalle del error: ${error}`);

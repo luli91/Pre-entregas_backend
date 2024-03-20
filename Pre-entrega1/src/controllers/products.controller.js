@@ -1,6 +1,9 @@
 //importa los servicios
 import productDao from '../daos/dbManager/product.dao.js';
-import { obtenerDatos, crearDato, deleteServices } from '../services/products.services.js'
+import { obtenerDatos, crearDato, deleteServices } from '../services/products.services.js';
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 export const getDatosControllers = async (req, res) => {
     let datos = await obtenerDatos();
@@ -41,12 +44,13 @@ export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
         const post = await productDao.updateProduct(id, req.body);
+        logger.info(`Product updated: ${JSON.stringify(post)}`);
         res.json({
             post,
             message: "Product updated",
         });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.json({
             error,
             message: "Error",

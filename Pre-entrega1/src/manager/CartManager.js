@@ -1,4 +1,7 @@
 import fs from 'fs';
+import { getLogger } from './config/loggerConfig.js';
+
+const logger = getLogger();
 
 export default class CartManager {
     constructor(path) {
@@ -24,7 +27,7 @@ export default class CartManager {
             await fs.promises.writeFile(this.path, JSON.stringify(data, null, "\t"));
             return true;
         } catch (error) {
-            console.log(error);
+            logger.error(error);
             return false;
         }
     }
@@ -46,7 +49,7 @@ export default class CartManager {
     async addProductToCart(cartId, productId) {
         const cart = this.getCartById(cartId);
         if (!cart) {
-            console.error("Carrito no encontrado");
+            logger.error("Carrito no encontrado");
             return;
         }
 

@@ -4,6 +4,10 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import passport from "passport";
 import { faker } from '@faker-js/faker';
+import { getLogger } from './config/loggerConfig.js';
+
+const logger = getLogger();
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +18,7 @@ const __dirname = dirname(__filename);
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 export const isValidPassword = (user, password) =>{
-    console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
+    logger.info(`Datos a validar: user-password: ${user.password}, password: ${password}`);
     return bcrypt.compareSync(password, user.password);
     
 }
@@ -29,8 +33,8 @@ export const generateJWToken = (user) =>{
 export const authToken = (req, res, next) =>{
     //el token se guarda en los headers de autorizacion, archivo register linea 14
     const authHeader = req.headers.authorization;
-    console.log("Token present is header auth");
-    console.log(authHeader);
+    logger.info("Token present is header auth");
+    logger.info(authHeader);
 
     if (!authHeader){
         return res.status(401).send({ error: "User not authenticated or missing token"});
@@ -42,7 +46,7 @@ export const authToken = (req, res, next) =>{
         if (error) return res.status(403).send({ error: "Token invalid, Unauthorized!"});
         //si el token esta ok
         req.user = credentials.user;
-        console.log(req.user);
+        logger.info(req.user);
         next();
     })
 }; 
@@ -50,15 +54,15 @@ export const authToken = (req, res, next) =>{
 // para manejo de errores
 export const passportCall = (strategy) => {
     return async (req, res, next) => {
-        console.log("Entrando a llamar strategy: ");
-        console.log(strategy);
+        logger.info("Entrando a llamar strategy: ");
+        logger.info(strategy);
         passport.authenticate(strategy, function (err, user, info) {
             if (err) return next(err);
             if (!user) {
                 return res.status(401).send({ error: info.messages ? info.messages : info.toString() });
             }
-            console.log("Usuario obtenido del strategy: ");
-            console.log(user);
+            logger.info("Usuario obtenido del strategy: ");
+            logger.info(user);
             req.user = user;
             next();
         })(req, res, next);

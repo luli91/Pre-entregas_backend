@@ -4,6 +4,9 @@ import GitHubStrategy from 'passport-github2';
 import jwtStrategy from 'passport-jwt'
 import { PRIVATE_KEY, createHash, isValidPassword } from '../dirname.js';
 import localStrategy from 'passport-local';
+import { getLogger } from '../config/loggerConfig.js';
+
+const logger = getLogger();
 
 
 const  JwtStrategy = jwtStrategy.Strategy;
@@ -17,10 +20,10 @@ export const initializePassport = () => {
             jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
             secretOrKey: PRIVATE_KEY
         }, async (jwt_payload, done) =>{
-            console.log("Entrando a passport Strategy con JWT.");
+            logger.info("Entrando a passport Strategy con JWT.");
             try{
-                console.log("JWT obtenido del Payload");
-                console.log(jwt_payload);
+                logger.info("JWT obtenido del Payload");
+                logger.info(jwt_payload);
                 return done(null, jwt_payload.user)
             }catch (error) {
                 return done(error)
@@ -36,15 +39,15 @@ export const initializePassport = () => {
             callbackUrl: 'http://localhost:5000/api/sessions/githubcallback',
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log("Perfil obtenido del usuario de GitHub ");
-            console.log(profile);
+            logger.info("Perfil obtenido del usuario de GitHub ");
+            logger.info(profile);
             try {
                 //Validamos si el user existe en la DB
                 const user = await userModel.findOne({ email: profile._json.email });
-                console.log("Usuario encontrado para login:");
-                console.log(user);
+                logger.info("Usuario encontrado para login:");
+                logger.info(user);
                 if (!user) {
-                    console.warn("User doesn't exists with username: " + profile._json.email);
+                    logger.warn("User doesn't exists with username: " + profile._json.email);
                     let newUser = {
                         first_name: profile._json.name,
                         last_name: '',
@@ -73,7 +76,7 @@ export const initializePassport = () => {
             try{
                 const exist = await userModel.findOne ({ email });
                 if (exist) {
-                    console.log("El usuario ya existe!!");
+                    logger.info("El usuario ya existe!!");
                     done(null, false)
                 }
                 const user = {
@@ -96,16 +99,16 @@ export const initializePassport = () => {
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             try {
                 const user = await userModel.findOne({ email: username });
-                console.log("Usuario encontrado para login!");
-                console.log(user);
+                logger.info("Usuario encontrado para login!");
+                logger.info(user);
 
                 if (!user) {
-                    console.warn("Usuario no existe con el nombre: " + username);
+                    logger.warn("Usuario no existe con el nombre: " + username);
                     return done(null, false);
                 }
 
                 if (!isValidPassword(user, password)) {
-                    console.warn("Credenciales invalidas para el usuario: " + username);
+                    logger.warn("Credenciales invalidas para el usuario: " + username);
                     return done(null, false);
                 }
                 return done(null, user);
@@ -125,7 +128,7 @@ export const initializePassport = () => {
             let user = await userModel.findById(id);
             done(null, user)
         } catch (error) {
-            console.error("Error deserializando el usuario: " + error);
+            logger.error("Error deserializando el usuario: " + error);
         }
     });
 
@@ -134,10 +137,10 @@ export const initializePassport = () => {
 };
 const cookieExtractor = req =>{
     let token = null;
-    console.log("entrando a Cookie Extractor");
+    logger.info("entrando a Cookie Extractor");
     if (req && req.cookies){
-    console.log("cookie presente: ");
-    console.log(req.cookies);
+    logger.info("cookie presente: ");
+    logger.info(req.cookies);
     token = req.cookie('jwtCookieToken')
     }
     return token;
