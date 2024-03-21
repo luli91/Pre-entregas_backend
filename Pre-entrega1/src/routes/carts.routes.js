@@ -75,8 +75,12 @@ router.delete('/:cid', async (req, res) => {
 
 router.post('/:cid/product/:pid', async (req, res) => {
     const { cid, pid } = req.params;
-    const product = { product: pid, quantity: 1 };
-    const respuesta = await cartDao.addProductToCart(cid, product);
+    const product = await productDao.findById(pid);
+    if (req.user.role === 'premium' && req.user._id === product.owner) {
+        return res.status(400).send('No puedes agregar a tu carrito un producto que te pertenece');
+    }
+    const cartProduct = { product: pid, quantity: 1 };
+    const respuesta = await cartDao.addProductToCart(cid, cartProduct);
     if (respuesta) {
         res.json({ status: 'Producto agregado al carrito' });
     } else {

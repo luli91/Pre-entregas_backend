@@ -61,8 +61,15 @@ const mailOptionsWithAttachments = {
 }
 
 //enviar mail- 
-export const sendEmail = (req, res) => {
+export const sendEmail = (to, subject, html, res) => {
     try {
+        let mailOptions = {
+            from: "Coder Test - " + config.gmailAccount,
+            to: to,
+            subject: subject,
+            html: html,
+        };
+
         let result = transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 logger.error(error);

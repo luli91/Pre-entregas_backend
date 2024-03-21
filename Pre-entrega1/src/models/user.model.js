@@ -13,7 +13,7 @@ const schema = new mongoose.Schema({
     age: Number,
     password: String,
     loggedBy: String,
-    role: { type: String, default: 'user',enum: ['user', 'admin'], }
+    role: { type: String, default: 'user',enum: ['user','premium', 'admin'], }
 })
 
 const userModel = mongoose.model(collection, schema)

@@ -10,7 +10,11 @@ const productSchema = new mongoose.Schema({
     code: { type: String, required: true, unique: true },
     stock: { type: Number, required: true },
     category: { type: String },
-
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+        }
 });
 
 productSchema.plugin(mongoosePaginate);

@@ -12,9 +12,12 @@ export const getDatosControllers = async (req, res) => {
 
 export const postDatosControllers = async (req, res) => {
     let dato = req.body;
+    // Si no se proporciona un owner, se asigna 'admin'
+    dato.owner = dato.owner || 'admin';
     await crearDato(dato);
     res.json({dato})
 }
+
 
 export const deleteDatosControllers = async (req, res) => {
     let {id} = req.params;
@@ -43,6 +46,10 @@ export const getProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
+        const product = await productDao.findById(id);
+        if (req.user.role !== 'admin' && req.user._id !== product.owner) {
+            return res.status(403).send('No tienes permiso para modificar este producto');
+        }
         const post = await productDao.updateProduct(id, req.body);
         logger.info(`Product updated: ${JSON.stringify(post)}`);
         res.json({
@@ -57,3 +64,18 @@ export const updateProduct = async (req, res) => {
         });
     }
 }
+
+export const deleteProduct = async (req, res) => {
+    const { id } = req.params;
+    const product = await productDao.findById(id);
+    if (req.user.role !== 'admin' && req.user._id !== product.owner) {
+        return res.status(403).send('No tienes permiso para eliminar este producto');
+    }
+
+    const deletedProduct = await productDao.deleteProduct(id);
+    if (deletedProduct) {
+        res.json({ status: 'Producto eliminado con éxito' });
+    } else {
+        res.status(500).json({ error: 'Hubo un error al eliminar el producto' });
+    }
+};
