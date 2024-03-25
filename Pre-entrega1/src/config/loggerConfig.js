@@ -4,7 +4,7 @@ import winston from "winston";
 const levels = {
     fatal: 0,
     error: 1,
-    warning: 2,
+    warn: 2,
     info: 3,
     http: 4,
     debug: 5
@@ -14,7 +14,7 @@ const levels = {
 const colors = {
     fatal: 'red',
     error: 'magenta',
-    warning: 'yellow',
+    warn: 'yellow',
     info: 'blue',
     http: 'purple',
     debug: 'white'
@@ -26,7 +26,6 @@ winston.addColors(colors);
 export const devLogger = winston.createLogger({
     levels,
     format: winston.format.combine(
-        winston.format.colorize(),
         winston.format.simple()
     ),
     transports: [

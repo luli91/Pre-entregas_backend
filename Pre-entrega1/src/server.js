@@ -25,6 +25,9 @@ import { addLogger, logger } from './config/addLogger.js'
 import loggerRoutes from './routes/logger.routes.js';
 
 dotenv.config();
+
+console.log('Entorno actual:', process.env.NODE_ENV);
+
 const app = express ();
 
 
