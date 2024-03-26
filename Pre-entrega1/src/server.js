@@ -21,8 +21,11 @@ import routerProduct from "./routes/products.routes.js";
 // import MongoSingleton from './config/mongodb_singleton.js';
 import emailRouter from "./routes/email.routes.js";
 import usersRouter from './routes/users.routes.js';
-import { addLogger, logger } from './config/addLogger.js'
+import { addLogger } from './config/addLogger.js'
 import loggerRoutes from './routes/logger.routes.js';
+import { getLogger } from './config/loggerConfig.js';
+
+const logger = getLogger();
 
 dotenv.config();
 

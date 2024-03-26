@@ -1,31 +1,32 @@
 import winston from "winston";
 
 // Define los niveles de loggeo
-const levels = {
-    fatal: 0,
-    error: 1,
-    warn: 2,
-    info: 3,
-    http: 4,
-    debug: 5
+const customLevelsOptions = {
+    levels: {
+        debug: 0,
+        http: 1,
+        info: 2,
+        warn: 3,
+        error: 4,
+        fatal: 5
+    },
+    colors: {
+        debug: 'white',
+        http: 'green',
+        info: 'blue',
+        warn: 'yellow',
+        error: 'magenta',
+        fatal: 'red'
+    }
 };
 
-// Define los colores para cada nivel
-const colors = {
-    fatal: 'red',
-    error: 'magenta',
-    warn: 'yellow',
-    info: 'blue',
-    http: 'purple',
-    debug: 'white'
-};
-
-winston.addColors(colors);
+winston.addColors(customLevelsOptions.colors);
 
 // Crea el logger para desarrollo
 export const devLogger = winston.createLogger({
-    levels,
+    levels: customLevelsOptions.levels,
     format: winston.format.combine(
+        winston.format.colorize(),
         winston.format.simple()
     ),
     transports: [
@@ -35,7 +36,7 @@ export const devLogger = winston.createLogger({
 
 // Crea el logger para producción
 export const prodLogger = winston.createLogger({
-    levels,
+    levels: customLevelsOptions.levels,
     format: winston.format.simple(),
     transports: [
         new winston.transports.Console({ level: 'info' }),
@@ -45,4 +46,8 @@ export const prodLogger = winston.createLogger({
 
 export function getLogger() {
     return process.env.NODE_ENV === 'production' ? prodLogger : devLogger;
-    }
+}
+
+// Usa getLogger para obtener el logger correcto
+const logger = getLogger();
+

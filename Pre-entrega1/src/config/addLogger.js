@@ -1,18 +1,17 @@
-import { devLogger, prodLogger } from './loggerConfig.js';
-import config from './config.js';
-
-// Selecciona el logger dependiendo del entorno
-export const logger = config.environment === 'production' ? prodLogger : devLogger;
+import { getLogger } from './loggerConfig.js';
 
 export const addLogger = (req, res, next) => {
+  // Asegúrate de que req.logger está definido
+  req.logger = getLogger();
 
-    req.logger = logger;
+  if (typeof req.logger.warn !== 'function') {
+      throw new Error('req.logger.warn is not a function');
+  }
 
-  // Agrega logs de alto valor
-    req.logger.warn(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
-    req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
-    req.logger.error(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
-    req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
+  req.logger.warn(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
+  req.logger.http(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
+  req.logger.error(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
+  req.logger.debug(`${req.method} en ${req.url} - at ${new Date().toLocaleDateString()} - ${new Date().toLocaleTimeString()}`);
 
-    next();
+  next();
 };
