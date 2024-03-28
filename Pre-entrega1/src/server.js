@@ -24,6 +24,8 @@ import usersRouter from './routes/users.routes.js';
 import { addLogger } from './config/addLogger.js'
 import loggerRoutes from './routes/logger.routes.js';
 import { getLogger } from './config/loggerConfig.js';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUIExpress from 'swagger-ui-express'
 
 const logger = getLogger();
 
@@ -41,8 +43,21 @@ const MONGO_URL = process.env.MONGO_URL;
 app.use(addLogger);
 
 const httpServer = app.listen(PORT, () =>
-    logger.info(`Server listening on port ${PORT}`)
+    console.log(`Server listening on port ${PORT}`)
 )
+
+
+const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentacion API Adopme",
+            description: "Documentacion para uso de swagger"
+        }
+    },
+    apis: [`./src/docs/users/**/*.yaml`]
+};
+const specs = swaggerJSDoc(swaggerOptions);
 
 
 // Instanciar Websocket
@@ -94,7 +109,8 @@ app.use ('/api/jwt', jwtRouter);
 app.use("/github", githubLoginViewRouter);
 app.use('/api/email', emailRouter);
 app.use("/api/users", usersRouter);
-
+// Declaramos la Api donde vamos a tener la parte grafica
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
 
 
 
