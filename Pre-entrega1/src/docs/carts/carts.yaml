@@ -1,0 +1,91 @@
+# carts.yaml
+
+paths:
+  /api/carts/:
+    get:
+      summary: Obtiene todos los carritos disponibles.
+      tags:
+        - carts
+      responses:
+        "200":
+          description: La operación fue exitosa. Se retorna una lista de carritos en formato JSON.
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado en el servidor. No se pudo manejar el proceso.
+
+    post:
+      summary: Crea un nuevo carrito.
+      tags:
+        - carts
+      requestBody:
+        description: Datos del carrito a crear.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        "200":
+          description: Carrito creado exitosamente.
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado en el servidor.
+
+  /api/carts/{cartId}:
+    get:
+      summary: Obtiene un carrito por su ID.
+      tags:
+        - carts
+      parameters:
+        - name: cartId
+          in: path
+          description: ID del carrito
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrito encontrado por ID.
+        "404":
+          description: Carrito no encontrado.
+
+    put:
+      summary: Actualiza la información de un carrito.
+      tags:
+        - carts
+      parameters:
+        - name: cartId
+          in: path
+          description: ID del carrito a actualizar
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos actualizados del carrito.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+      responses:
+        "200":
+          description: Carrito actualizado exitosamente.
+
+    delete:
+      summary: Elimina un carrito por su ID.
+      tags:
+        - carts
+      parameters:
+        - name: cartId
+          in: path
+          description: ID del carrito a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Carrito eliminado exitosamente.
+        "404":
+          description: Carrito no encontrado.

@@ -31,7 +31,7 @@ const logger = getLogger();
 
 dotenv.config();
 
-console.log('Entorno actual:', process.env.NODE_ENV);
+logger.info('Entorno actual:', process.env.NODE_ENV);
 
 const app = express ();
 
@@ -39,25 +39,37 @@ const app = express ();
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
-// Middleware de logger
-app.use(addLogger);
 
-const httpServer = app.listen(PORT, () =>
-    console.log(`Server listening on port ${PORT}`)
-)
-
-
+//especificación OpenAPI 
 const swaggerOptions = {
     definition: {
         openapi: "3.0.1",
         info: {
             title: "Documentacion API Adopme",
             description: "Documentacion para uso de swagger"
-        }
+        },
     },
-    apis: [`./src/docs/users/**/*.yaml`]
+    apis: [`./Pre-entrega1/src/docs/**/*.yaml`],
 };
+
 const specs = swaggerJSDoc(swaggerOptions);
+
+//ruta para servir la especificación OpenAPI en formato JSON
+app.get('/apidocs/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(specs);
+});
+
+
+// Declaramos la Api donde vamos a tener la parte grafica
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+
+// Middleware de logger
+app.use(addLogger);
+
+const httpServer = app.listen(PORT, () =>
+    console.log(`Server listening on port ${PORT}`)
+)
 
 
 // Instanciar Websocket
@@ -106,12 +118,9 @@ app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
 app.use ('/api/jwt', jwtRouter);
-app.use("/github", githubLoginViewRouter);
+app.use('/github', githubLoginViewRouter);
 app.use('/api/email', emailRouter);
-app.use("/api/users", usersRouter);
-// Declaramos la Api donde vamos a tener la parte grafica
-app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
-
+app.use('/api/users', usersRouter);
 
 
 io.on("connection", (socket) => {

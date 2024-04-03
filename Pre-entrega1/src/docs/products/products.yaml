@@ -1,0 +1,98 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos disponibles en la aplicación.
+      tags:
+        - products
+      responses:
+        "200":
+          description: La operación fue exitosa. Se retorna un arreglo con los productos en formato JSON.
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado en el servidor. No se pudo manejar el proceso.
+
+    post:
+      summary: Crea un nuevo producto.
+      tags:
+        - products
+      requestBody:
+        description: Datos del producto a crear.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Producto creado exitosamente.
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado en el servidor.
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por su ID.
+      tags:
+        - products
+      parameters:
+        - name: pid
+          in: path
+          description: ID del producto
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Producto encontrado por ID.
+        "404":
+          description: Producto no encontrado.
+
+  /api/products-render-html/:
+  get:
+    summary: Obtiene todos los productos y renderiza una vista HTML con los productos.
+    tags:
+      - products
+    responses:
+      "200":
+        description: Renderiza una vista HTML con los productos.
+
+
+  /api/products/{id}:
+    put:
+      summary: Actualiza la información de un producto.
+      tags:
+        - products
+      parameters:
+        - name: id
+          in: path
+          description: ID del producto a actualizar
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Datos actualizados del producto.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "200":
+          description: Producto actualizado exitosamente en formato JSON o un mensaje de error.
+
+    delete:
+      summary: Elimina un producto según el ID proporcionado.
+      tags:
+        - products
+      parameters:
+        - name: id
+          in: path
+          description: ID del producto a eliminar
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Devuelve un mensaje de éxito en formato JSON.
