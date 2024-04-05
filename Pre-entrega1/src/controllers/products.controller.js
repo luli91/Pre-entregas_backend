@@ -79,3 +79,23 @@ export const deleteProduct = async (req, res) => {
         res.status(500).json({ error: 'Hubo un error al eliminar el producto' });
     }
 };
+
+export const updateStockController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await productDao.findById(id);
+        // Verifica si el usuario tiene permiso para modificar el producto
+        if (req.user.role !== 'admin' && req.user._id !== product.owner) {
+            return res.status(403).send('No tienes permiso para modificar este producto');
+        }
+        // Actualiza el stock del producto con los datos proporcionados en req.body
+        const updatedProduct = await productDao.updateProduct(id, req.body);
+        logger.info(`Stock updated for product: ${JSON.stringify(updatedProduct)}`);
+        res.json({
+            updatedProduct,
+            message: "Stock updated",
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

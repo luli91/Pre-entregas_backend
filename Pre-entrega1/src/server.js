@@ -2,8 +2,6 @@ import express from 'express';
 import messageRouter from "./routes/message.routes.js";
 import productsRouter from "./routes/products.routes.js";
 import cartRouter from "./routes/carts.routes.js";
-// import ProductManager from './manager/ProductManager.js';
-// import { Product } from './manager/ProductManager.js';
 import handlebars from "express-handlebars";
 import { __dirname } from "./dirname.js";
 import { Server } from "socket.io";
@@ -21,11 +19,13 @@ import routerProduct from "./routes/products.routes.js";
 // import MongoSingleton from './config/mongodb_singleton.js';
 import emailRouter from "./routes/email.routes.js";
 import usersRouter from './routes/users.routes.js';
-import { addLogger } from './config/addLogger.js'
+import { addLogger } from './config/addLogger.js';
 import loggerRoutes from './routes/logger.routes.js';
 import { getLogger } from './config/loggerConfig.js';
-import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUIExpress from 'swagger-ui-express'
+import swaggerUi from "swagger-ui-express";
+import specs from './config/swagger.config.js'
+import cors from 'cors';
+
 
 const logger = getLogger();
 
@@ -40,20 +40,10 @@ const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
 
 
-//especificación OpenAPI 
-const swaggerOptions = {
-    definition: {
-        openapi: "3.0.1",
-        info: {
-            title: "Documentacion API Adopme",
-            description: "Documentacion para uso de swagger"
-        },
-    },
-    apis: [`./Pre-entrega1/src/docs/**/*.yaml`],
-};
-
-const specs = swaggerJSDoc(swaggerOptions);
-
+app.use(cors({
+    origin: 'http://localhost:9090', 
+    
+}));
 //ruta para servir la especificación OpenAPI en formato JSON
 app.get('/apidocs/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
@@ -62,7 +52,7 @@ app.get('/apidocs/api-docs.json', (req, res) => {
 
 
 // Declaramos la Api donde vamos a tener la parte grafica
-app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Middleware de logger
 app.use(addLogger);
@@ -117,7 +107,7 @@ app.use('/api/messages', messageRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartRouter);
 app.use('/users', usersViewRouter);
-app.use ('/api/jwt', jwtRouter);
+app.use('/api/jwt', jwtRouter);
 app.use('/github', githubLoginViewRouter);
 app.use('/api/email', emailRouter);
 app.use('/api/users', usersRouter);

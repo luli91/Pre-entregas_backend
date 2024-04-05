@@ -3,7 +3,7 @@ import { getLogger } from '../../config/loggerConfig.js';
 
 const logger = getLogger();
 
-class CartDao {
+class cartDao {
     async findCarts() {
         return await cartModel.find();
     }
@@ -78,4 +78,7 @@ class CartDao {
     }
 }
 
-export default new CartDao();
+export default new cartDao();
+
+
+

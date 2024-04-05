@@ -1,5 +1,3 @@
-# carts.yaml
-
 paths:
   /api/carts/:
     get:
