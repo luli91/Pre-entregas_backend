@@ -131,6 +131,7 @@ io.on("connection", (socket) => {
     });
 });
 
+export default app;
 // // Conexión a MongoDB usando el patrón Singleton
 //lo comento ya que voy a trabajar con factory
 // const mongoInstance = async () => {
