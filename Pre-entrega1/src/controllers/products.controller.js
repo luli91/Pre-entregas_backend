@@ -6,7 +6,7 @@ import { getLogger } from '../config/loggerConfig.js';
 const logger = getLogger();
 
 export const getDatosControllers = async (req, res) => {
-    let datos = await obtenerDatos();
+    let datos = await obtenerDatos(req);
     res.json(datos);
 }
 

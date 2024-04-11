@@ -5,6 +5,7 @@ const requester = supertest(app);
 
 describe('Product Routes', () => {
     let productId; //almacena el ID del producto creado
+    const userId = 'id-del-usuario'; 
 
     const newProduct = { 
         title: 'Producto de prueba',
@@ -14,7 +15,7 @@ describe('Product Routes', () => {
         code: 'codigo-de-prueba',
         stock: 10,
         category: 'categoria-de-prueba',
-        owner: 'id-del-usuario' 
+        owner: userId 
     };
     const updatedData = { 
         title: 'Producto de prueba actualizado',
@@ -24,7 +25,7 @@ describe('Product Routes', () => {
         code: 'codigo-de-prueba-actualizado',
         stock: 15,
         category: 'categoria-de-prueba-actualizada',
-        owner: 'id-del-usuario' // Actualiza esto con un ID de usuario válido
+        owner: userId
     };
 
     beforeEach(async (done) => {
@@ -85,7 +86,7 @@ describe('Product Routes', () => {
     it('should delete a product', (done) => {
         requester
             .delete(`/${productId}`)
-            .expect(200) // Aserción de supertest
+            .expect(200) 
             .end((err, res) => {
                 if (err) return done(err);
                 done();
@@ -93,7 +94,7 @@ describe('Product Routes', () => {
     });
 
     afterEach(async (done) => {
-        // Elimina el producto después de cada prueba
+        // elimina el producto después de cada prueba
         requester
             .delete(`/${productId}`)
             .expect(200) // Aserción de supertest
@@ -103,3 +104,5 @@ describe('Product Routes', () => {
             });
     });
 });
+
+//npx mocha Pre-entrega1/test/products.supertest.js

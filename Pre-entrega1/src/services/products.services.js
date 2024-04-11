@@ -1,7 +1,7 @@
 import productDao from '../daos/dbManager/product.dao.js';
 
 
-export const obtenerDatos = async () => {
+export const obtenerDatos = async (req) => {
     //logica de negocio
         let { limit, page, sort, category, minStock } = req.query;
 
