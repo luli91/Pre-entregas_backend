@@ -29,7 +29,10 @@ import cors from 'cors';
 
 const logger = getLogger();
 
-dotenv.config();
+dotenv.config({ path: './Pre-entrega1/src/config/.env.development' });
+console.log('MONGO_URL:', process.env.MONGO_URL);
+
+
 
 logger.info('Entorno actual:', process.env.NODE_ENV);
 
@@ -49,7 +52,6 @@ app.get('/apidocs/api-docs.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(specs);
 });
-
 
 // Declaramos la Api donde vamos a tener la parte grafica
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(specs));

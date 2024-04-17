@@ -10,7 +10,9 @@ export default class UserServiceMongo {
     }
 
     getAll = async () => {
+        console.log('Intentando obtener todos los usuarios...');
         let user = await userModel.find();
+        console.log('Usuarios obtenidos:', user);
         return user.map(user => user.toObject());
     }
     save = async (user) => {

@@ -4,16 +4,21 @@ import app from '../../Pre-entrega1/src/server.js';
 const requester = supertest.agent(app);
 
 describe('Session route', () => {
-  let token; // almacena el token de autenticación del usuario
+    let token; // almacena el token de autenticación del usuario
+    let userId;
 
     before(async () => {
+
     // crea un usuario de prueba y obtiene su token de autenticación
         const user = { 
         name: 'Test User',
         email: 'testuser@example.com',
         password: 'testpassword' 
         };
+
         let res = await requester.post('/users').send(user);
+        userId = res.body._id;
+
         expect(res.statusCode).to.equal(200);
 
         const credentials = { 
@@ -23,6 +28,7 @@ describe('Session route', () => {
         res = await requester.post('/login').send(credentials);
         expect(res.statusCode).to.equal(200);
         token = res.body.token; // guarda el token para usarlo en las pruebas
+
     });
 
     it('should return Bienvenido!! for the first visit', async () => {
@@ -47,4 +53,5 @@ describe('Session route', () => {
 
 
 
-//npx mocha Pre-entrega1/test/sessions.supertest.js
+//npx mocha Pre-entrega1/test/*.js
+//ejecuta todas las pruebas

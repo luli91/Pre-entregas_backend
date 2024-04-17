@@ -72,6 +72,7 @@ export const initializePassport = () => {
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email'},
         async (req, username, password, done) =>{
+            console.log("Ejecutando estrategia de registro");
             const { first_name, last_name, email, age } = req.body;
             try{
                 const exist = await userModel.findOne ({ email });

@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon Pre-entrega1/src/server.js"
-  },
+    "start": "node Pre-entrega1/src/server.js",
+    "dev": "nodemon Pre-entrega1/src/server.js",
+    "test": "mocha Pre-entrega1/test/**/*.js"
+  },  
   "keywords": [],
   "author": "",
   "license": "ISC",

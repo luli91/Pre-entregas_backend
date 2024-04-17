@@ -94,8 +94,8 @@ describe('Cart Routes', () => {
     });
 
     it('should get a cart by user id', async () => {
-        const userId = 'id_del_usuario'; 
-        const res = await requester.get(`/cart/cart/${userId}`);
+        
+        const res = await requester.get(`/cart/${userId}`);
         expect(res.statusCode).to.equal(200);
         
     });
@@ -113,4 +113,5 @@ describe('Cart Routes', () => {
     });
 });
 
-//npx mocha Pre-entrega1/test/cart.supertest.js
+//npx mocha Pre-entrega1/test/*.js
+//ejecuta todas las pruebas

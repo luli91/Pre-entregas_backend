@@ -78,8 +78,8 @@ router.post("/login", async (req, res) => {
 
 // Register
 router.post('/register', passport.authenticate('register', { session: false }), async (req, res) => {
-    logger.info("Registrando usuario:");
-    res.status(201).send({ status: "success", message: "Usuario creado con extito." });
+    console.log("Datos de la petición:", req.body);
+    res.status(201).send({ status: "success", message: "Usuario creado con exito." });
 })
 
 router.get('/api/sessions/current', passport.authenticate('jwt', { session: false }), (req, res) => {

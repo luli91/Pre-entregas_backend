@@ -8,11 +8,11 @@ const logger = getLogger();
 let userService;
 
 async function initializeMongoService() {
-    logger.info("Iniciando Servicio para Mongo!!");
+    console.log("Iniciando Servicio para Mongo!!");
     try {
         await MongoSingleton.getInstance();
     } catch (error) {
-        logger.error("Error al iniciar MongoDB:", error);
+        console.error("Error al iniciar MongoDB:", error);
         process.exit(1); // Salir con código de error
     }
 }

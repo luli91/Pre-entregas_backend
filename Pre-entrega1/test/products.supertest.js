@@ -43,7 +43,7 @@ describe('Product Routes', () => {
 
     it('should get a product by id', (done) => {
         requester
-            .get(`/ruta-del-producto/${productId}`)
+            .get(`/${productId}`)
             .expect(200) 
             .end((err, res) => {
                 if (err) return done(err);
@@ -76,7 +76,7 @@ describe('Product Routes', () => {
         requester
             .put(`/${productId}`)
             .send(updatedData)
-            .expect(200) // Aserción de supertest
+            .expect(200) 
             .end((err, res) => {
                 if (err) return done(err);
                 done();
@@ -94,10 +94,10 @@ describe('Product Routes', () => {
     });
 
     afterEach(async (done) => {
-        // elimina el producto después de cada prueba
+        // elimina el producto despus de cada prueba
         requester
             .delete(`/${productId}`)
-            .expect(200) // Aserción de supertest
+            .expect(200) 
             .end((err, res) => {
                 if (err) return done(err);
                 done();
@@ -105,4 +105,5 @@ describe('Product Routes', () => {
     });
 });
 
-//npx mocha Pre-entrega1/test/products.supertest.js
+//npx mocha Pre-entrega1/test/*.js
+//ejecuta todas las pruebas
